@@ -36,9 +36,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/lib.o \
-	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/png2ppm.o \
 	${OBJECTDIR}/pnglib.o \
-	${OBJECTDIR}/readpng.o
+	${OBJECTDIR}/readpng.o \
+	${OBJECTDIR}/utils/img_lib.o \
+	${OBJECTDIR}/utils/pgmlib.o \
+	${OBJECTDIR}/utils/ppmlib.o
 
 
 # C Compiler Flags
@@ -70,10 +73,10 @@ ${OBJECTDIR}/lib.o: lib.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib.o lib.c
 
-${OBJECTDIR}/main.o: main.c 
+${OBJECTDIR}/png2ppm.o: png2ppm.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/png2ppm.o png2ppm.c
 
 ${OBJECTDIR}/pnglib.o: pnglib.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -84,6 +87,21 @@ ${OBJECTDIR}/readpng.o: readpng.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/readpng.o readpng.c
+
+${OBJECTDIR}/utils/img_lib.o: utils/img_lib.c 
+	${MKDIR} -p ${OBJECTDIR}/utils
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils/img_lib.o utils/img_lib.c
+
+${OBJECTDIR}/utils/pgmlib.o: utils/pgmlib.c 
+	${MKDIR} -p ${OBJECTDIR}/utils
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils/pgmlib.o utils/pgmlib.c
+
+${OBJECTDIR}/utils/ppmlib.o: utils/ppmlib.c 
+	${MKDIR} -p ${OBJECTDIR}/utils
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils/ppmlib.o utils/ppmlib.c
 
 # Subprojects
 .build-subprojects:

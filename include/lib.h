@@ -25,6 +25,7 @@ extern "C" {
     
 #define RED  "\033[22;31m"
 #define GREEN  "\033[22;32m"
+#define LIGHT_YELLOW  "\033[22;93m"
 #define RESETCOLOR "\033[0m"
 
     

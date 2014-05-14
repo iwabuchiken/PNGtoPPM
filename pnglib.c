@@ -83,12 +83,16 @@ void abort_(const char * s, ...)
  **************************************/
 void abort_(const char * s, ...)
 {
-        va_list args;
-        va_start(args, s);
-        vfprintf(stderr, s, args);
-        fprintf(stderr, "\n");
-        va_end(args);
-        abort();
+    //log
+    printf("[%s : %d] aborting...\n", base_name(__FILE__), __LINE__);
+
+    va_list args;
+    va_start(args, s);
+    vfprintf(stderr, s, args);
+    fprintf(stderr, "\n");
+    va_end(args);
+    abort();
+    
 }
 //
 ///*************************************
@@ -660,18 +664,172 @@ void _test_ReadPng
 
         png_read_image(png_ptr, row_pointers);
 
-        //log
-    printf("[%s : %d] png_read_image() => done\n", base_name(__FILE__), __LINE__);
+        consolColor_Change(LIGHT_YELLOW);
 
+        //log
+        printf("[%s : %d] png_read_image() => done\n", base_name(__FILE__), __LINE__);
+
+        consolColor_Reset();
         
         fclose(fp);
         
         //log
 //    printf("[%s : %d] row_pointers[0][0] => %d\n", base_name(__FILE__), __LINE__, row_pointers[0][0]);
 
-        
+        consolColor_Change(LIGHT_YELLOW);
+
         //log
-    printf("[%s : %d] _test_ReadPng() => done\n", base_name(__FILE__), __LINE__);
+        printf("[%s : %d] _test_ReadPng() => done\n", base_name(__FILE__), __LINE__);
+
+        consolColor_Reset();
 
         
 }//void _test_ReadPng
+
+void process_file
+(png_structp png_ptr, png_infop info_ptr,
+int width, int height)
+//void process_file(void)
+{
+    if (png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_RGB
+            && png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_RGBA)
+            abort_(
+                "[process_file] input file is neither PNG_COLOR_TYPE_RGB "
+                "or PNG_COLOR_TYPE_RGBA. ");
+
+//    if (png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_RGBA)
+//            abort_("[process_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (%d) (is %d)",
+//                   PNG_COLOR_TYPE_RGBA, png_get_color_type(png_ptr, info_ptr));
+        
+    int x, y;
+    
+    for (y=0; y<height; y++) {
+
+//        //log
+//    printf("[%s : %d] y = %d\n", base_name(__FILE__), __LINE__, y);
+//
+            png_byte* row = row_pointers[y];
+//
+//            //log
+//    printf("[%s : %d] png_byte* row\n", base_name(__FILE__), __LINE__);
+
+
+            for (x=0; x<width; x++) {
+
+                png_byte* ptr = &(row[x*3]);
+
+//                        printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d\n",
+//                               x, y, ptr[0], ptr[1], ptr[2]);
+//                        png_byte* ptr = &(row[x*4]);
+//                        printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+//                               x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+
+                        /* set red value to 0 and green value to the blue one */
+//                        ptr[0] = 0;
+//                        ptr[1] = ptr[2];
+            //log
+                  ptr[0] = 0; ptr[1] = 0;
+//                  ptr[1] = 0; ptr[2] = 0;
+//                ptr[0] = 255 - ptr[0]; ptr[1] = 0; ptr[2] = 0;
+//                ptr[0] = 0; ptr[1] = 255 - ptr[1]; ptr[2] = 0;
+//                ptr[0] = 0; ptr[1] = 0; ptr[2] = 255 - ptr[2];
+
+            }
+    }//for (y=0; y<height; y++)
+        
+        //log
+    printf("[%s : %d] processing => done\n", base_name(__FILE__), __LINE__);
+
+}
+
+void conv_PNG_to_PPM(png_structp png_ptr, PPM *ppm)
+//PPM* conv_PNG_to_PPM(png_structp png_ptr)
+{
+//    PPM *ppm = (PPM *) malloc(sizeof(PPM) * 1);
+    
+    ppm->file_name = (char *) malloc(sizeof(char) * 20);
+    
+    char *fname = "qwertyuiop";
+    
+    strcpy(ppm->file_name, fname);
+    
+    ppm->file_name[strlen(fname)] = '\0';
+    
+    //log
+    printf("[%s : %d] png_ptr->width = %d\n", base_name(__FILE__), __LINE__, png_ptr->width);
+
+    ppm->x = png_ptr->width;
+    ppm->y = png_ptr->height;
+//    ppm->x = (gray) *(png_ptr->width);
+//    ppm->x = (gray) png_ptr->width;
+    
+//    ppm->x = 100;
+    
+    strcpy(ppm->format, "P6");
+    
+    ppm->format[2] = '\0';
+    
+//    ppm->max_brightness = png_ptr->
+    /*************************************
+ 
+     * Conv: pixels
+ 
+     **************************************/
+    int num_of_pixels;
+    
+    int max_brightness = 0;
+    int tmp;
+    
+    num_of_pixels = png_ptr->width * png_ptr->height;
+    
+    ppm->pixels = (pixel *) malloc (sizeof(pixel) * num_of_pixels);
+    
+    int x, y;
+    int counter = 0;    // counter for ppm->pixels
+    
+    for (y=0; y< png_ptr->height; y++) {
+
+//        //log
+//    printf("[%s : %d] y = %d\n", base_name(__FILE__), __LINE__, y);
+//
+            png_byte* row = row_pointers[y];
+//
+//            //log
+//    printf("[%s : %d] png_byte* row\n", base_name(__FILE__), __LINE__);
+
+
+            for (x=0; x< png_ptr->width; x++) {
+
+                png_byte* ptr = &(row[x*3]);
+                
+                ppm->pixels[counter].r = ptr[0];
+                
+                tmp = ptr[0];
+                if(tmp > max_brightness)
+                    max_brightness = tmp;
+                
+                ppm->pixels[counter].g = ptr[1];
+                ppm->pixels[counter].b = ptr[2];
+                
+//                (ppm->pixels + counter)). = ptr[0];
+//                (ppm->pixels + counter)[1] = ptr[1];
+//                (ppm->pixels + counter)[2] = ptr[2];
+                
+                counter ++;
+                
+//                ptr[0] = 255 - ptr[0]; ptr[1] = 0; ptr[2] = 0;
+//                ptr[0] = 0; ptr[1] = 255 - ptr[1]; ptr[2] = 0;
+//                ptr[0] = 0; ptr[1] = 0; ptr[2] = 255 - ptr[2];
+
+            }
+    }//for (y=0; y<height; y++)
+    
+    ppm->max_brightness = max_brightness;
+    
+    //log
+//    printf("[%s : %d] ppm->x = %d\n", base_name(__FILE__), __LINE__, ppm->x);
+
+    
+//    return ppm;
+    
+}

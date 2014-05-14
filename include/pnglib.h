@@ -13,6 +13,10 @@
 #include "lib.h"
 #endif
 
+#ifndef IMG_LIB_H
+#include "img_lib.h"
+#endif
+
 #include <zlib.h>
 
 #include <stdarg.h>
@@ -81,6 +85,12 @@ extern "C" {
     (char*, png_structp, png_infop,
         int *, int *,
         png_byte *, png_byte *);
+    
+    void process_file
+    (png_structp, png_infop, int, int);
+    
+    void conv_PNG_to_PPM(png_structp, PPM *);
+//    PPM* conv_PNG_to_PPM(png_structp);
     
 #ifdef	__cplusplus
 }

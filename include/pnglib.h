@@ -47,6 +47,8 @@ extern "C" {
 #endif
 
     png_bytep * row_pointers;
+    png_bytep * row_pointers_RGBA;
+//    png_bytep * row_pointers_rgba;
     
     void show_message_png(void);
     
@@ -81,7 +83,17 @@ extern "C" {
         int *, int *, int *,
         png_byte *, png_byte *);
     
+    void _test_ReadPng_Rgba
+    (char*, png_structp, png_infop, 
+        int *, int *, int *,
+        png_byte *, png_byte *);
+    
     void _test_WritePng
+    (char*, png_structp, png_infop,
+        int *, int *,
+        png_byte *, png_byte *);
+    
+    void _test_WritePng_Rgba
     (char*, png_structp, png_infop,
         int *, int *,
         png_byte *, png_byte *);
@@ -91,6 +103,10 @@ extern "C" {
     
     void conv_PNG_to_PPM(png_structp, PPM *);
 //    PPM* conv_PNG_to_PPM(png_structp);
+    
+    void conv_RGB_to_RGBA
+    (char*, png_structp, png_structp,
+            png_infop, int *, int *);
     
 #ifdef	__cplusplus
 }

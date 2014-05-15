@@ -17,6 +17,10 @@ pushd /home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/dist/Debug/GNU-Linux-x86/
 
 /home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm
 
+#merge_png.c
+/home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/download-jpg.copy-6.png images/download-jpg.merged-1.png
+
+
 ./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.png images/download-jpg.copy.png
 ------------------------
 

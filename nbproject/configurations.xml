@@ -28,7 +28,7 @@
         <itemPath>utils/ppmlib.c</itemPath>
       </logicalFolder>
       <itemPath>lib.c</itemPath>
-      <itemPath>png_opaque.c</itemPath>
+      <itemPath>merge_png.c</itemPath>
       <itemPath>pnglib.c</itemPath>
       <itemPath>readpng.c</itemPath>
     </logicalFolder>
@@ -44,6 +44,7 @@
       <itemPath>Makefile</itemPath>
       <itemPath>main.c.from_Read_PNG</itemPath>
       <itemPath>png2ppm.c~</itemPath>
+      <itemPath>png_opaque.c~</itemPath>
       <itemPath>readme.txt</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -78,7 +79,7 @@
       </item>
       <item path="lib.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="png_opaque.c" ex="false" tool="0" flavor2="0">
+      <item path="merge_png.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pnglib.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -129,7 +130,7 @@
       </item>
       <item path="lib.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="png_opaque.c" ex="false" tool="0" flavor2="0">
+      <item path="merge_png.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pnglib.c" ex="false" tool="0" flavor2="0">
       </item>

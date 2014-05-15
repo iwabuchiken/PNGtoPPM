@@ -388,6 +388,205 @@ void _test_WritePng
     fclose(fp);
 }//void write_png_file()
 
+/*************************************
+ * _test_WritePng_Merge
+ * 
+ * @param type 1        => src 1
+ *              2       => src 2
+ *              3       => dst
+ **************************************/
+void _test_WritePng_Merge
+(char* file_name, png_structp png_ptr,
+    png_infop info_ptr,
+    int *width, int *height,
+    png_byte *color_type, png_byte *bit_depth, int type)
+{
+    
+    //log
+    printf("[%s : %d] Starts => _test_WritePng_Merge\n", base_name(__FILE__), __LINE__);
+
+    int x, y;
+//    int y;
+    
+    /* create file */
+    FILE *fp = fopen(file_name, "wb");
+    
+    //log
+    printf("[%s : %d] fopen() => done\n", base_name(__FILE__), __LINE__);
+
+    
+    if (!fp)
+            abort_("[write_png_file] File %s could not be opened for writing", file_name);
+
+    //log
+    printf("[%s : %d] file => opened: %s\n", base_name(__FILE__), __LINE__, file_name);
+
+
+    /* initialize stuff */
+    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr)
+            abort_("[write_png_file] png_create_write_struct failed");
+
+    //log
+    printf("[%s : %d] png_ptr => created\n", base_name(__FILE__), __LINE__);
+
+    
+    info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr)
+            abort_("[write_png_file] png_create_info_struct failed");
+
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during init_io");
+
+    //log
+    printf("[%s : %d] png_create_info_struct => done\n", base_name(__FILE__), __LINE__);
+
+    
+    png_init_io(png_ptr, fp);
+
+    //log
+    printf("[%s : %d] png_init_io => done\n", base_name(__FILE__), __LINE__);
+
+
+    /* write header */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during writing header");
+
+    png_set_IHDR(png_ptr, info_ptr, *width, *height,
+                 *bit_depth, *color_type, PNG_INTERLACE_NONE,
+                 PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+    
+    //log
+    printf("[%s : %d] png_set_IHDR => done\n", base_name(__FILE__), __LINE__);
+
+    
+    png_write_info(png_ptr, info_ptr);
+
+    //log
+    printf("[%s : %d] png_write_info => done\n", base_name(__FILE__), __LINE__);
+
+    /* write bytes */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during writing bytes");
+
+
+    /*************************************
+ 
+     * write: row pointers
+ 
+     **************************************/
+    if (type == 1) {
+        
+        png_write_image(png_ptr, row_pointers_A);
+        
+    } else if (type == 2) {
+        
+        png_write_image(png_ptr, row_pointers_B);
+        
+    } else if (type == 3) {
+        
+//        /*************************************
+// 
+//        * init: row_pointers_C
+//
+//        **************************************/
+//   //    int x, y;   // iterator
+//
+//       int width = png_ptr->width;
+//       int height = png_ptr->height;
+//
+//       row_pointers_C = (png_bytep*) malloc(sizeof(png_bytep) * (height));
+//
+//       //log
+//       printf("[%s : %d] malloc done for row_pointers_C\n", 
+//               base_name(__FILE__), __LINE__);
+//
+//
+//       for (y=0; y < height; y++)
+//               row_pointers_C[y] = 
+//                       (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+//
+//       //log
+//       printf("[%s : %d] malloc done for => row_pointers_C[y]\n", base_name(__FILE__), __LINE__);
+//
+//
+//       for (y = 0; y < height; y++) {
+//
+//           png_byte* row = row_pointers_C[y];
+//   //
+//           for (x=0; x<width; x++) {
+//
+//               png_byte* ptr = &(row[x*3]);
+//
+//           //log
+//               ptr[0] = 0; ptr[1] = 0; ptr[2] = 0;
+//   //                  ptr[1] = 0; ptr[2] = 0;
+//
+//           }
+//       }//for (y=0; y<height; y++)    
+//
+//       //log
+//       printf("[%s : %d] init_Row_Pointers_C() => done\n", base_name(__FILE__), __LINE__);
+
+        png_write_image(png_ptr, row_pointers_C);
+        
+    } else {
+        
+        consolColor_Change(RED);
+
+        //log
+        printf("[%s : %d] unknown file type => %d\n", 
+                base_name(__FILE__), __LINE__, type);
+
+        consolColor_Reset();
+        
+        fclose(fp);
+        
+        exit(0);
+
+    }
+
+    //log
+    printf("[%s : %d] png_write_image => done\n", base_name(__FILE__), __LINE__);
+
+    /* end write */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during end of write");
+
+    png_write_end(png_ptr, NULL);
+
+    /* cleanup heap allocation */
+//    for (y=0; y < *height; y++)
+//    for (y=0; y<height; y++)
+    if (type == 1) {
+        
+        for (y=0; y < *height; y++)
+            free(row_pointers_A[y]);
+        
+        free(row_pointers_A);
+
+    } else if (type == 2) {
+        
+        for (y=0; y < *height; y++)
+            free(row_pointers_B[y]);
+        
+        free(row_pointers_B);
+
+    } else if (type == 3) {
+
+        for (y=0; y < *height; y++)
+            free(row_pointers_C[y]);
+        
+        free(row_pointers_C);
+
+    }
+    
+//    free(row_pointers);
+
+    fclose(fp);
+}//void write_png_file()
+
 void _test_WritePng_Rgba
 (char* file_name, png_structp png_ptr,
     png_infop info_ptr,
@@ -819,6 +1018,105 @@ void _test_ReadPng
         
 }//void _test_ReadPng
 
+/*************************************
+ * _test_ReadPng_Merge
+ * 
+ * @param type 1        => src 1
+ *              2       => src 2
+ **************************************/
+void _test_ReadPng_Merge
+(char* file_name,
+        png_structp png_ptr, png_infop info_ptr,
+        int *width, int *height, int *number_of_passes,
+        png_byte *color_type, png_byte *bit_depth, int type)
+{
+    char header[8];    // 8 is the maximum size that can be checked
+
+    int y;  // for-loop counter
+
+    /* open file and test for it being a png */
+    FILE *fp = fopen(file_name, "rb");
+    if (!fp)
+            abort_("[read_png_file] File %s could not be opened for reading", file_name);
+    fread(header, 1, 8, fp);
+    if (png_sig_cmp(header, 0, 8))
+            abort_("[read_png_file] File %s is not recognized as a PNG file", file_name);
+
+
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[read_png_file] Error during init_io");
+
+    png_init_io(png_ptr, fp);
+    png_set_sig_bytes(png_ptr, 8);
+
+    png_read_info(png_ptr, info_ptr);
+
+    *width = png_get_image_width(png_ptr, info_ptr);
+    *height = png_get_image_height(png_ptr, info_ptr);
+    *color_type = png_get_color_type(png_ptr, info_ptr);
+    *bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+
+    *number_of_passes = png_set_interlace_handling(png_ptr);
+    png_read_update_info(png_ptr, info_ptr);
+
+
+    /* read file */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[read_png_file] Error during read_image");
+
+    /*************************************
+ 
+     * row pointers
+ 
+     **************************************/
+    // src 1
+    if (type == 1) {
+
+        row_pointers_A = (png_bytep*) malloc(sizeof(png_bytep) * (*height));
+
+        for (y=0; y< *height; y++)
+                row_pointers_A[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+
+        png_read_image(png_ptr, row_pointers_A);
+
+    } else if (type == 2) {
+        // src 2
+        
+        row_pointers_B = (png_bytep*) malloc(sizeof(png_bytep) * (*height));
+
+        for (y=0; y< *height; y++)
+                row_pointers_B[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+
+        png_read_image(png_ptr, row_pointers_B);
+
+    } else {
+        
+        consolColor_Change(RED);
+
+        //log
+        printf("[%s : %d] unknown file type => %d\n", base_name(__FILE__), __LINE__, type);
+
+        consolColor_Reset();
+
+        fclose(fp);
+        
+        exit(0);
+        
+    }
+       
+        
+    fclose(fp);
+    
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] _test_ReadPng() => done\n", base_name(__FILE__), __LINE__);
+
+    consolColor_Reset();
+
+        
+}//void _test_ReadPng
+
 void _test_ReadPng_Rgba
 (char* file_name,
         png_structp png_ptr, png_infop info_ptr,
@@ -944,35 +1242,16 @@ int width, int height)
     
     for (y=0; y<height; y++) {
 
-//        //log
-//    printf("[%s : %d] y = %d\n", base_name(__FILE__), __LINE__, y);
-//
             png_byte* row = row_pointers[y];
 //
-//            //log
-//    printf("[%s : %d] png_byte* row\n", base_name(__FILE__), __LINE__);
-
-
             for (x=0; x<width; x++) {
 
                 png_byte* ptr = &(row[x*3]);
 
-//                        printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d\n",
-//                               x, y, ptr[0], ptr[1], ptr[2]);
-//                        png_byte* ptr = &(row[x*4]);
-//                        printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-//                               x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
-
-                        /* set red value to 0 and green value to the blue one */
-//                        ptr[0] = 0;
-//                        ptr[1] = ptr[2];
             //log
                   ptr[0] = 0; ptr[1] = 0;
 //                  ptr[1] = 0; ptr[2] = 0;
-//                ptr[0] = 255 - ptr[0]; ptr[1] = 0; ptr[2] = 0;
-//                ptr[0] = 0; ptr[1] = 255 - ptr[1]; ptr[2] = 0;
-//                ptr[0] = 0; ptr[1] = 0; ptr[2] = 255 - ptr[2];
-
+                  
             }
     }//for (y=0; y<height; y++)
         
@@ -1177,3 +1456,48 @@ void conv_RGB_to_RGBA
 
         
 }//void _test_ReadPng
+
+void init_Row_Pointers_C
+(png_structp png_ptr, png_infop info_ptr)
+{
+    
+    int x, y;   // iterator
+    
+    int width = png_ptr->width;
+    int height = png_ptr->height;
+    
+    row_pointers_C = (png_bytep*) malloc(sizeof(png_bytep) * (height));
+
+    //log
+    printf("[%s : %d] malloc done for row_pointers_C\n", 
+            base_name(__FILE__), __LINE__);
+
+    
+    for (y=0; y < height; y++)
+            row_pointers_C[y] = 
+                    (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+    
+    //log
+    printf("[%s : %d] malloc done for => row_pointers_C[y]\n", base_name(__FILE__), __LINE__);
+
+    
+    for (y = 0; y < height; y++) {
+
+        png_byte* row = row_pointers_C[y];
+//
+        for (x=0; x<width; x++) {
+
+            png_byte* ptr = &(row[x*3]);
+
+        //log
+            ptr[0] = 0; ptr[1] = 0; ptr[2] = 200;
+//                  ptr[1] = 0; ptr[2] = 0;
+
+        }
+    }//for (y=0; y<height; y++)    
+    
+    //log
+    printf("[%s : %d] init_Row_Pointers_C() => done\n", base_name(__FILE__), __LINE__);
+
+    
+}//init_Row_Pointers_C

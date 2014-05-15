@@ -48,6 +48,18 @@ extern "C" {
 
     png_bytep * row_pointers;
     png_bytep * row_pointers_RGBA;
+    
+    // merge_png.c
+    png_bytep * row_pointers_A;
+    png_bytep * row_pointers_B;
+    png_bytep * row_pointers_C;
+    
+    typedef enum MergeFileType {
+        
+        SRC_A, SRC_B
+                
+    } MergeFileType;
+    
 //    png_bytep * row_pointers_rgba;
     
     void show_message_png(void);
@@ -88,10 +100,20 @@ extern "C" {
         int *, int *, int *,
         png_byte *, png_byte *);
     
+    void _test_ReadPng_Merge
+    (char*, png_structp, png_infop, 
+        int *, int *, int *,
+        png_byte *, png_byte *, int);
+    
     void _test_WritePng
     (char*, png_structp, png_infop,
         int *, int *,
         png_byte *, png_byte *);
+    
+    void _test_WritePng_Merge
+    (char*, png_structp, png_infop,
+        int *, int *,
+        png_byte *, png_byte *, int);
     
     void _test_WritePng_Rgba
     (char*, png_structp, png_infop,

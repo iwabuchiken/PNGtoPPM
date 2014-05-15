@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/lib.o \
-	${OBJECTDIR}/png_opaque.o \
+	${OBJECTDIR}/merge_png.o \
 	${OBJECTDIR}/pnglib.o \
 	${OBJECTDIR}/readpng.o \
 	${OBJECTDIR}/utils/img_lib.o \
@@ -73,10 +73,10 @@ ${OBJECTDIR}/lib.o: lib.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib.o lib.c
 
-${OBJECTDIR}/png_opaque.o: png_opaque.c 
+${OBJECTDIR}/merge_png.o: merge_png.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/png_opaque.o png_opaque.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/merge_png.o merge_png.c
 
 ${OBJECTDIR}/pnglib.o: pnglib.c 
 	${MKDIR} -p ${OBJECTDIR}

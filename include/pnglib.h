@@ -42,6 +42,8 @@ typedef unsigned long   ulg;  // readpng.h
 
 #define PNG_LIBPNG_VER_STRING "1.6.10"  // png.h
 
+#define PIXEL_GREEN 0, 100, 0
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -129,6 +131,9 @@ extern "C" {
     void conv_RGB_to_RGBA
     (char*, png_structp, png_structp,
             png_infop, int *, int *);
+    
+    void set_PixelVals(png_byte*, int, int, int);
+
     
 #ifdef	__cplusplus
 }

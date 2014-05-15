@@ -1489,8 +1489,10 @@ void init_Row_Pointers_C
 
             png_byte* ptr = &(row[x*3]);
 
+            set_PixelVals(ptr, PIXEL_GREEN);
+//            set_PixelVals(ptr, 0, 100, 0);
         //log
-            ptr[0] = 0; ptr[1] = 0; ptr[2] = 200;
+//            ptr[0] = 0; ptr[1] = 0; ptr[2] = 200;
 //                  ptr[1] = 0; ptr[2] = 0;
 
         }
@@ -1501,3 +1503,9 @@ void init_Row_Pointers_C
 
     
 }//init_Row_Pointers_C
+
+void set_PixelVals(png_byte* ptr, int r, int g, int b)
+{
+    ptr[0] = r; ptr[1] = g; ptr[2] = b;
+}
+

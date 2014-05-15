@@ -188,6 +188,8 @@ char ** str_split_r_2(char *, char, int, int *);
 
 char* concat(char *, char *);
 
+int max(int, int);
+
 #ifdef	__cplusplus
 }
 #endif

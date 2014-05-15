@@ -1509,3 +1509,32 @@ void set_PixelVals(png_byte* ptr, int r, int g, int b)
     ptr[0] = r; ptr[1] = g; ptr[2] = b;
 }
 
+void merge_PngSrcs
+(
+    int width_A, int height_A, 
+    int width_B, int height_B, 
+    int width_C, int height_C
+)
+{
+    int x, y;
+    
+    for(y = 0; y < height_A; y++) {
+        
+        png_byte *row_A = row_pointers_A[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_A; x++) {
+            
+            png_byte *ptr_A = &(row_A[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_A[0];
+            ptr_C[1] = ptr_A[1];
+            ptr_C[2] = ptr_A[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+    }//for(y = 0; y < height_A; y++)
+    
+}

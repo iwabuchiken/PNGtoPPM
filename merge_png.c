@@ -139,11 +139,6 @@ int main(int argc, char** argv) {
         &width_B, &height_B, &number_of_passes_B,
         &color_type_B, &bit_depth_B);
     
-//    get_PngInfo
-//    (file_dst, png_ptr_C, info_ptr_C,
-//        &width_C, &height_C, &number_of_passes_C,
-//        &color_type_C, &bit_depth_C);
-    
     /*************************************
  
      * tests
@@ -252,15 +247,18 @@ int main(int argc, char** argv) {
             base_name(__FILE__), __LINE__, png_ptr_A->color_type, png_ptr_B->color_type);
 
     
-//    int tmp;
-//    for(tmp = 0; tmp < 10; tmp++) {
-//        
-//        //log
-//        printf("[%s : %d] row_poniters_A[%d] = %d / row_poniters_B[%d] = %d\n",
-//                base_name(__FILE__), __LINE__, 
-//                tmp, row_pointers_A[0][tmp], tmp, row_pointers_B[0][tmp]);
-//
-//    }
+    //log
+    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
+
+    
+    //log
+    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
+
+    //log
+    printf("[%s : %d] png_ptr_B: w, h => %d, %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_B->width, png_ptr_B->height);
 
     /*************************************
  
@@ -270,12 +268,17 @@ int main(int argc, char** argv) {
      * 2. depth => same as 1
  
      **************************************/
-//    //log
-//    printf("[%s : %d] width_A, width_B => %d, %d\n",
-//            base_name(__FILE__), __LINE__, width_A, width_B);
-    
     width_C = width_A + width_B;
-    height_C = height_A + height_B;
+    height_C = max(height_A, height_B);
+//    height_C = height_A + height_B;
+    
+//    //log
+//    printf("[%s : %d] width_A, width_B => %d, %d (max = %d)\n",
+//            base_name(__FILE__), __LINE__, width_A, width_B, max(width_A, width_B));
+//    printf("[%s : %d] width_B, width_A => %d, %d (max = %d)\n",
+//            base_name(__FILE__), __LINE__, width_B, width_A, max(width_B, width_A));
+
+    
 
     color_type_C = color_type_A;
     bit_depth_C = bit_depth_A;
@@ -330,6 +333,17 @@ int main(int argc, char** argv) {
     //log
     printf("[%s : %d] Back from => init_Row_Pointers_C()\n", base_name(__FILE__), __LINE__);
 
+    /*************************************
+ 
+     * copy: png A to png C
+ 
+     **************************************/
+    merge_PngSrcs(
+            width_A, height_A,
+            width_B, height_B,
+            width_C, height_C
+            );
+    
     /*************************************
  
      * write png

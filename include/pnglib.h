@@ -134,6 +134,11 @@ extern "C" {
     
     void set_PixelVals(png_byte*, int, int, int);
 
+    void merge_PngSrcs(
+            int, int, 
+            int, int, 
+            int, int
+        );
     
 #ifdef	__cplusplus
 }

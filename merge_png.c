@@ -346,6 +346,7 @@ int main(int argc, char** argv) {
             base_name(__FILE__), __LINE__, png_ptr_C->color_type);
 
     
+    
     _test_WritePng_Merge
     (file_dst, png_ptr_C, info_ptr_C,
         &width_C, &height_C,

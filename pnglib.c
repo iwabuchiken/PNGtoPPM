@@ -1042,6 +1042,9 @@ void _test_ReadPng_Merge
     if (png_sig_cmp(header, 0, 8))
             abort_("[read_png_file] File %s is not recognized as a PNG file", file_name);
 
+    //log
+    printf("[%s : %d] file name => %s\n", base_name(__FILE__), __LINE__, file_name);
+
 
     if (setjmp(png_jmpbuf(png_ptr)))
             abort_("[read_png_file] Error during init_io");
@@ -1516,11 +1519,22 @@ void merge_PngSrcs
     int width_C, int height_C
 )
 {
-    int x, y;
+    //log
+    printf("[%s : %d] width_A, height_A => %d, %d\nwidth_B, height_B => %d, %d\nwidth_C, height_C => %d, %d", base_name(__FILE__), __LINE__,
+            width_A, height_A,
+            width_B, height_B,
+            width_C, height_C
+            );
+
     
-    for(y = 0; y < height_A; y++) {
+    
+    int x, x2, y;
+    
+    for(y = 0; y < height_B; y++) {
+//    for(y = 0; y < height_A; y++) {
         
         png_byte *row_A = row_pointers_A[y];
+        png_byte *row_B = row_pointers_B[y];
         png_byte *row_C = row_pointers_C[y];
         
         for(x = 0; x < width_A; x++) {
@@ -1535,6 +1549,39 @@ void merge_PngSrcs
             
         }//for(x = 0; x < width_A; x++)
     
-    }//for(y = 0; y < height_A; y++)
+        for(x2 = 0; x2 < width_B; x++, x2++) {
+            
+            png_byte *ptr_B = &(row_B[x2 * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_B[0];
+            ptr_C[1] = ptr_B[1];
+            ptr_C[2] = ptr_B[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+    }//for(y = 0; y < height_B; y++)
+    
+    // chunk 2
+    for(y = height_B; y < height_C; y++) {
+
+        png_byte *row_A = row_pointers_A[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_A; x++) {
+            
+            png_byte *ptr_A = &(row_A[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_A[0];
+            ptr_C[1] = ptr_A[1];
+            ptr_C[2] = ptr_A[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+        
+    }
+    
     
 }

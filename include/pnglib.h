@@ -40,7 +40,7 @@ typedef unsigned long   ulg;  // readpng.h
 //typedef const png_byte        * png_const_bytep;  // png.h
 //typedef size_t png_size_t;  // png.h
 
-#define PNG_LIBPNG_VER_STRING "1.6.10"  // png.h
+//#define PNG_LIBPNG_VER_STRING "1.6.10"  // png.h
 
 #define PIXEL_GREEN 0, 100, 0
 

@@ -38,7 +38,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/lib.o \
 	${OBJECTDIR}/merge_png.o \
 	${OBJECTDIR}/pnglib.o \
-	${OBJECTDIR}/readpng.o \
 	${OBJECTDIR}/utils/img_lib.o \
 	${OBJECTDIR}/utils/pgmlib.o \
 	${OBJECTDIR}/utils/ppmlib.o
@@ -82,11 +81,6 @@ ${OBJECTDIR}/pnglib.o: pnglib.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pnglib.o pnglib.c
-
-${OBJECTDIR}/readpng.o: readpng.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/readpng.o readpng.c
 
 ${OBJECTDIR}/utils/img_lib.o: utils/img_lib.c 
 	${MKDIR} -p ${OBJECTDIR}/utils

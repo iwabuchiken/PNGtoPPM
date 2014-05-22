@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #ifndef PNGLIB_H
+//#include "include/pnglib.h"
 #include "include/pnglib.h"
 #include "include/pnginfo.h"
 #endif

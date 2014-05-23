@@ -1461,7 +1461,7 @@ void conv_RGB_to_RGBA
 }//void _test_ReadPng
 
 void init_Row_Pointers_C
-(png_structp png_ptr, png_infop info_ptr)
+(png_structp png_ptr, png_infop info_ptr, char *bg_name)
 {
     
     int x, y;   // iterator
@@ -1491,8 +1491,34 @@ void init_Row_Pointers_C
         for (x=0; x<width; x++) {
 
             png_byte* ptr = &(row[x*3]);
+            
+            if (!strcmp(bg_name, "green")) {
+                
+                set_PixelVals(ptr, PIXEL_GREEN);
 
-            set_PixelVals(ptr, PIXEL_GREEN);
+            } else if (!strcmp(bg_name, "red")) {
+                
+                set_PixelVals(ptr, PIXEL_RED);
+                
+            } else if (!strcmp(bg_name, "blue")) {
+                
+                set_PixelVals(ptr, PIXEL_BLUE);
+                
+            } else if (!strcmp(bg_name, "purple")) {
+                
+                set_PixelVals(ptr, PIXEL_PURPLE);
+                
+            } else if (!strcmp(bg_name, "white")) {
+                
+                set_PixelVals(ptr, PIXEL_WHITE);
+                
+            } else if (!strcmp(bg_name, "black")) {
+                
+                set_PixelVals(ptr, PIXEL_BLACK);
+                
+            }
+
+//            set_PixelVals(ptr, PIXEL_GREEN);
 //            set_PixelVals(ptr, 0, 100, 0);
         //log
 //            ptr[0] = 0; ptr[1] = 0; ptr[2] = 200;
@@ -1509,7 +1535,11 @@ void init_Row_Pointers_C
 
 void set_PixelVals(png_byte* ptr, int r, int g, int b)
 {
-    ptr[0] = r; ptr[1] = g; ptr[2] = b;
+    ptr[0] = 255 * r / 100;
+    ptr[1] = 255 * g / 100;
+    ptr[2] = 255 * b / 100;
+//    ptr[1] = g; ptr[2] = b;
+//    ptr[0] = r; ptr[1] = g; ptr[2] = b;
 }
 
 void merge_PngSrcs

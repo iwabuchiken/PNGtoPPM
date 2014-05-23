@@ -21,16 +21,27 @@
  * Global vars
  **************************/
 int Opt_Merge_Direction = 0;    // 0: vertical, 1: horizontal
-char *bg_color; // background color
+char *opt_bg_color; // background color
 
 //const char *bg_colors = {
 char *bg_colors[] = {
     
-    "red", "blue", "green", "purple"
+    "red", "blue", "green", "purple",
+    "white", "black"
     
 };
 
 const int bg_colors_len = 4;    // length of bg_colors
+
+char *direc[] = {
+  
+    "verti", "hori"
+    
+};
+
+int opt_merge_direc = 0;        // option: merge direction
+                                // 0: vertical, 1: horizontal
+                                // default => 0
 
 //#ifndef LIB_H
 
@@ -57,6 +68,7 @@ void _test_malloc_in_function(void);
 
 void set_Options(char **);
 void set_Options_BgColor(char **);
+void set_Options_MergeDirec(char **);
 
 /*************************************
  
@@ -116,7 +128,7 @@ int main(int argc, char** argv) {
      **************************/
     set_Options(argv);
     
-    exit(1);
+//    exit(1);
     
     /*************************************
  
@@ -170,34 +182,6 @@ int main(int argc, char** argv) {
      * tests
  
      **************************************/
-//    if (row_pointers_rgba == NULL) {
-//        
-//        //log
-//        printf("[%s : %d] row_pointers_rgba => NULL\n", base_name(__FILE__), __LINE__);
-//
-//        
-//    } else {
-//        
-//        //log
-//        printf("[%s : %d] row_pointers_rgba => not NULL\n", base_name(__FILE__), __LINE__);
-//    }
-//    
-//    
-//    
-//    
-//    if (row_pointers_rgba == NULL) {
-//        
-//        //log
-//        printf("[%s : %d] row_pointers_rgba => NULL\n", base_name(__FILE__), __LINE__);
-//
-//        
-//    } else {
-//        
-//        //log
-//        printf("[%s : %d] row_pointers_rgba => not NULL\n", base_name(__FILE__), __LINE__);
-//    }
-//    _test_double_pointer();
-//    _test_malloc_in_function();
     
     /*************************************
  
@@ -268,24 +252,6 @@ int main(int argc, char** argv) {
     
     consolColor_Reset();
 
-//    //log
-//    printf("[%s : %d] png_ptr_A->color_type, png_ptr_B->color_type => %d, %d\n", 
-//            base_name(__FILE__), __LINE__, png_ptr_A->color_type, png_ptr_B->color_type);
-
-    
-//    //log
-//    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
-//            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
-
-    
-//    //log
-//    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
-//            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
-//
-//    //log
-//    printf("[%s : %d] png_ptr_B: w, h => %d, %d\n", 
-//            base_name(__FILE__), __LINE__, png_ptr_B->width, png_ptr_B->height);
-
     /*************************************
  
      * Build: dst png info
@@ -298,14 +264,6 @@ int main(int argc, char** argv) {
     height_C = max(height_A, height_B);
 //    height_C = height_A + height_B;
     
-//    //log
-//    printf("[%s : %d] width_A, width_B => %d, %d (max = %d)\n",
-//            base_name(__FILE__), __LINE__, width_A, width_B, max(width_A, width_B));
-//    printf("[%s : %d] width_B, width_A => %d, %d (max = %d)\n",
-//            base_name(__FILE__), __LINE__, width_B, width_A, max(width_B, width_A));
-
-    
-
     color_type_C = color_type_A;
     bit_depth_C = bit_depth_A;
     
@@ -317,12 +275,6 @@ int main(int argc, char** argv) {
     
     png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
     info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
-    
-    
-//    //log
-//    printf("[%s : %d] info_ptr_C->rowbytes => %d\n", 
-//            base_name(__FILE__), __LINE__, info_ptr_C->rowbytes);
-
     
     /*************************************
  
@@ -344,7 +296,8 @@ int main(int argc, char** argv) {
      * file: pnglib.c
  
      **************************************/
-    init_Row_Pointers_C(png_ptr_C, info_ptr_C);
+    init_Row_Pointers_C(png_ptr_C, info_ptr_C, opt_bg_color);
+//    init_Row_Pointers_C(png_ptr_C, info_ptr_C);
 
     //log
     printf("[%s : %d] png_ptr_C->width, png_ptr_C->height => %d, %d\n",
@@ -582,11 +535,14 @@ char ** _setup_FileName_Src(int argc, char **argv)
 void show_help(void)
 {
     char *msg = "<Usage>\n"
-                "\tpngtoppm src1 src2 dst\n"
-                "\n"
-                "<Options>\n"
-                "\t-bg\t background color\n"
-                "\t\tred, green, blue, purple"
+    "\tpngtoppm src1 src2 dst\n"
+    "\n"
+    "<Options>\n"
+    "\t-bg\t background color\n"
+    "\t\tred, green, blue, purple, white, black"
+    "\t-direc\n"
+    "\t\tverti, hori\n"
+    
     ;
 
 
@@ -607,53 +563,12 @@ void set_Options(char **argv)
             
             set_Options_BgColor(argv);
             
-//            argv++;
-//            
-////            if (*argv == NULL) {
-////
-////                //log
-////                printf("[%s : %d] no value set for option '-bg'\n", 
-////                        base_name(__FILE__), __LINE__);
-////
-////                exit(-1);
-////                
-////            }
-//            
-//            if(*argv != NULL) {
-////            if(!strcmp(*argv, "red")) {
-//                
-//                int len = strlen(*argv);
-//                
-//                bg_color = (char *) malloc(sizeof(char) * (len + 1));
-//                
-//                strcpy(bg_color, *argv);
-//                bg_color[len] = '\0';
-//                
-//                //log
-//                printf("[%s : %d] bg_color => %s\n", base_name(__FILE__), __LINE__, bg_color);
-//
-//                int res_i = is_InArray(*argv, bg_colors, 3);
-//                
-//                //log
-//                printf("[%s : %d] res_i => %d\n", base_name(__FILE__), __LINE__, res_i);
-//
-//                
-//                
-//            } else {
-//                
-//                //log
-//                printf("[%s : %d] no value set for option '-bg'\n", 
-//                        base_name(__FILE__), __LINE__);
-//
-//                exit(-1);
-//
-//            }//if(*argv != NULL)
             
-        } else {
+        } else if (!strcmp(*argv, "-direc")) {
+            
+            set_Options_MergeDirec(argv);
+            
         }//if (!strcmp(*argv, "-bg"))
-        
-//        //log
-//        printf("[%s : %d] *argv => %s\n", base_name(__FILE__), __LINE__, *argv);
 
         argv++;
     }
@@ -696,23 +611,64 @@ void set_Options_BgColor(char **argv)
     
     int len = strlen(*argv);
 
-    bg_color = (char *) malloc(sizeof(char) * (len + 1));
+    opt_bg_color = (char *) malloc(sizeof(char) * (len + 1));
 
-    strcpy(bg_color, *argv);
-    bg_color[len] = '\0';
-
-    //log
-    printf("[%s : %d] bg_color => %s\n", base_name(__FILE__), __LINE__, bg_color);
+    strcpy(opt_bg_color, *argv);
+    opt_bg_color[len] = '\0';
 
     //log
-    printf("[%s : %d] sizeof(bg_colors) => %d\n", 
-            base_name(__FILE__), __LINE__, sizeof(bg_colors));
-    printf("[%s : %d] sizeof(bg_colors) / sizeof(char *) => %d\n", 
-            base_name(__FILE__), __LINE__, sizeof(bg_colors) / sizeof(char *));
-
-    
-//    int res_i = is_InArray(*argv, bg_colors, 3);
-
-    
+    printf("[%s : %d] opt_bg_color => %s\n", base_name(__FILE__), __LINE__, opt_bg_color);
             
 }//void set_Options_BgColor(char **argv)
+
+void set_Options_MergeDirec(char **argv)
+{
+    argv++;
+
+    /**************************
+     * Validate: Value for '-bg' option
+     **************************/
+    if(*argv == NULL) {
+        //log
+        printf("[%s : %d] no value set for option '-direc'\n", 
+                base_name(__FILE__), __LINE__);
+
+        exit(-1);
+    }
+    
+    /**************************
+     * Validate: The value is in the bg_colors?
+     **************************/
+    int res_i = is_InArray(*argv, direc, sizeof(direc) / sizeof(char *));
+//    int res_i = is_InArray(*argv, bg_colors, 3);
+    
+    if(res_i == false) {
+        
+        //log
+        printf("[%s : %d] Unknown direction name => %s\n",
+                base_name(__FILE__), __LINE__, *argv);
+        
+        exit(-1);
+
+    } else {
+        
+        //log
+        printf("[%s : %d] res_i => %d\n", base_name(__FILE__), __LINE__, res_i);
+        
+    }
+    
+    if(!strcmp(*argv, direc[0])) {      // vertical
+        
+        opt_merge_direc = 0;
+        
+    } else if(!strcmp(*argv, direc[1])) {       // horizontal
+        
+        opt_merge_direc = 1;
+        
+    }
+
+    //log
+    printf("[%s : %d] opt_merge_direc => %d\n", 
+            base_name(__FILE__), __LINE__, opt_merge_direc);
+    
+}//void set_Options_MergeDirec(char

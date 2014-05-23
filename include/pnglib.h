@@ -46,6 +46,8 @@ typedef unsigned long   ulg;  // readpng.h
 #define PIXEL_BLUE      0, 0, 100
 #define PIXEL_RED       100, 0, 0
 #define PIXEL_PURPLE    100, 0, 100
+#define PIXEL_WHITE    100, 100, 100
+#define PIXEL_BLACK    0, 0, 0
 
 #ifdef	__cplusplus
 extern "C" {
@@ -163,6 +165,9 @@ extern "C" {
         int, int, 
         int, int
     );
+
+    void init_Row_Pointers_C
+    (png_structp, png_infop, char *);
     
 #ifdef	__cplusplus
 }

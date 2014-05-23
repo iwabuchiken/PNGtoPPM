@@ -42,7 +42,10 @@ typedef unsigned long   ulg;  // readpng.h
 
 //#define PNG_LIBPNG_VER_STRING "1.6.10"  // png.h
 
-#define PIXEL_GREEN 0, 100, 0
+#define PIXEL_GREEN     0, 100, 0
+#define PIXEL_BLUE      0, 0, 100
+#define PIXEL_RED       100, 0, 0
+#define PIXEL_PURPLE    100, 0, 100
 
 #ifdef	__cplusplus
 extern "C" {

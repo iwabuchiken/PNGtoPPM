@@ -11,14 +11,17 @@ pushd C:\WORKS\WS\WS_Android_20130929_122122\IP
 .\dist\Debug\MinGW-Windows\ip.exe -rgb 100,100,100 -dst .\images\lena512.ppm -ff -f -src ..\image_processing_Nagao_2\D-4\images\lena512.pgm
 
 # Ubuntu
-pushd /home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM
-pushd /home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/images
-pushd /home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/dist/Debug/GNU-Linux-x86/
+pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM
+./dist/Debug/GNU-Linux-x86/pngtoppm
 
-/home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm
+pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/images
+pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/
+
+/home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm
 
 #merge_png.c
-/home/iwabuchik/WORKS/WS/WS_Prog/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/download-jpg.copy-6.png images/download-jpg.merged-1.png
+/home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/download-jpg.copy-6.png images/download-jpg.merged-6.png
+./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/download-jpg.copy-6.png images/download-jpg.merged-6.png
 
 
 ./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.png images/download-jpg.copy.png
@@ -40,6 +43,8 @@ git config --global alias.co checkout
 git config --global alias.c commit
 git config --global alias.s status
 git config --global alias.l log
+git config --global user.email "iwabuchi.k.2010@gmail.com"
+git config --global user.name "iwabuchiken"
 
 ------------------------
 

@@ -25,6 +25,8 @@ extern "C" {
     
 #define RED  "\033[22;31m"
 #define GREEN  "\033[22;32m"
+#define BLUE  "\033[22;34m"
+#define LIGHT_BLUE  "\033[22;94m"
 #define LIGHT_YELLOW  "\033[22;93m"
 #define RESETCOLOR "\033[0m"
 
@@ -77,6 +79,16 @@ extern "C" {
 #include <string.h>
 #endif
 
+///////////////////////////////////////////////////////
+
+// Defines
+
+///////////////////////////////////////////////////////
+#ifndef TRUE_FALSE
+#define TRUE_FALSE
+#define true    1
+#define false   0
+#endif
     
 ///////////////////////////////////////////////////////
 
@@ -155,11 +167,13 @@ typedef enum
 // Prototypes
 
 ///////////////////////////////////////////////////////
-char *get_FileSep_Str(void);
 char* base_name(char*);	    // abc\def.txt ==> \def.txt
 char* base_name_2(char*);   // abc\def.txt ==> def.txt (No separator)
 
+int is_InArray(char *, char **, int);
+
 char get_FileSep(void);
+char *get_FileSep_Str(void);
 
 int textcolor(void);
 int backcolor(void);

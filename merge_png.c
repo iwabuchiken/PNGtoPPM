@@ -17,6 +17,21 @@
 #include "include/pnginfo.h"
 #endif
 
+/**************************
+ * Global vars
+ **************************/
+int Opt_Merge_Direction = 0;    // 0: vertical, 1: horizontal
+char *bg_color; // background color
+
+//const char *bg_colors = {
+char *bg_colors[] = {
+    
+    "red", "blue", "green", "purple"
+    
+};
+
+const int bg_colors_len = 4;    // length of bg_colors
+
 //#ifndef LIB_H
 
 /*
@@ -39,6 +54,9 @@ void show_help(void);
 
 void _test_double_pointer(void);
 void _test_malloc_in_function(void);
+
+void set_Options(char **);
+void set_Options_BgColor(char **);
 
 /*************************************
  
@@ -92,6 +110,13 @@ int main(int argc, char** argv) {
     png_byte color_type_C, bit_depth_C;
 
     png_structp png_ptr_C; png_infop info_ptr_C;
+    
+    /**************************
+     * Options
+     **************************/
+    set_Options(argv);
+    
+    exit(1);
     
     /*************************************
  
@@ -315,6 +340,8 @@ int main(int argc, char** argv) {
     /*************************************
  
      * init: row_pointers_C (dst png)
+     * 
+     * file: pnglib.c
  
      **************************************/
     init_Row_Pointers_C(png_ptr_C, info_ptr_C);
@@ -556,10 +583,136 @@ void show_help(void)
 {
     char *msg = "<Usage>\n"
                 "\tpngtoppm src1 src2 dst\n"
+                "\n"
+                "<Options>\n"
+                "\t-bg\t background color\n"
+                "\t\tred, green, blue, purple"
     ;
+
+
+    consolColor_Change(LIGHT_BLUE);
     
     //log
     printf("[%s : %d]\n%s\n", base_name(__FILE__), __LINE__, msg);
 
+    consolColor_Reset();
     
 }
+
+void set_Options(char **argv)
+{
+    while(*argv != NULL) {
+        
+        if (!strcmp(*argv, "-bg")) {
+            
+            set_Options_BgColor(argv);
+            
+//            argv++;
+//            
+////            if (*argv == NULL) {
+////
+////                //log
+////                printf("[%s : %d] no value set for option '-bg'\n", 
+////                        base_name(__FILE__), __LINE__);
+////
+////                exit(-1);
+////                
+////            }
+//            
+//            if(*argv != NULL) {
+////            if(!strcmp(*argv, "red")) {
+//                
+//                int len = strlen(*argv);
+//                
+//                bg_color = (char *) malloc(sizeof(char) * (len + 1));
+//                
+//                strcpy(bg_color, *argv);
+//                bg_color[len] = '\0';
+//                
+//                //log
+//                printf("[%s : %d] bg_color => %s\n", base_name(__FILE__), __LINE__, bg_color);
+//
+//                int res_i = is_InArray(*argv, bg_colors, 3);
+//                
+//                //log
+//                printf("[%s : %d] res_i => %d\n", base_name(__FILE__), __LINE__, res_i);
+//
+//                
+//                
+//            } else {
+//                
+//                //log
+//                printf("[%s : %d] no value set for option '-bg'\n", 
+//                        base_name(__FILE__), __LINE__);
+//
+//                exit(-1);
+//
+//            }//if(*argv != NULL)
+            
+        } else {
+        }//if (!strcmp(*argv, "-bg"))
+        
+//        //log
+//        printf("[%s : %d] *argv => %s\n", base_name(__FILE__), __LINE__, *argv);
+
+        argv++;
+    }
+}
+
+void set_Options_BgColor(char **argv)
+{
+    argv++;
+
+    /**************************
+     * Validate: Value for '-bg' option
+     **************************/
+    if(*argv == NULL) {
+        //log
+        printf("[%s : %d] no value set for option '-bg'\n", 
+                base_name(__FILE__), __LINE__);
+
+        exit(-1);
+    }
+    
+    /**************************
+     * Validate: The value is in the bg_colors?
+     **************************/
+    int res_i = is_InArray(*argv, bg_colors, sizeof(bg_colors) / sizeof(char *));
+//    int res_i = is_InArray(*argv, bg_colors, 3);
+    
+    if(res_i == false) {
+        
+        //log
+        printf("[%s : %d] Unknown color name => %s\n", base_name(__FILE__), __LINE__, *argv);
+        
+        exit(-1);
+
+    } else {
+        
+        //log
+        printf("[%s : %d] res_i => %d\n", base_name(__FILE__), __LINE__, res_i);
+        
+    }
+    
+    int len = strlen(*argv);
+
+    bg_color = (char *) malloc(sizeof(char) * (len + 1));
+
+    strcpy(bg_color, *argv);
+    bg_color[len] = '\0';
+
+    //log
+    printf("[%s : %d] bg_color => %s\n", base_name(__FILE__), __LINE__, bg_color);
+
+    //log
+    printf("[%s : %d] sizeof(bg_colors) => %d\n", 
+            base_name(__FILE__), __LINE__, sizeof(bg_colors));
+    printf("[%s : %d] sizeof(bg_colors) / sizeof(char *) => %d\n", 
+            base_name(__FILE__), __LINE__, sizeof(bg_colors) / sizeof(char *));
+
+    
+//    int res_i = is_InArray(*argv, bg_colors, 3);
+
+    
+            
+}//void set_Options_BgColor(char **argv)

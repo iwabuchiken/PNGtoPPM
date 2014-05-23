@@ -633,3 +633,22 @@ int max(int x, int y)
     return (x >= y) ? x : y;
     
 }
+
+int is_InArray
+(char *target, char **array, int array_len)
+{
+    int i;
+    
+    for (i = 0; i < array_len; i++) {
+
+        if(!strcmp(target, array[i])) {
+            
+            return true;
+            
+        }
+
+    }
+
+    return false;
+    
+}

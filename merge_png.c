@@ -43,6 +43,9 @@ int opt_merge_direc = 0;        // option: merge direction
                                 // 0: vertical, 1: horizontal
                                 // default => 0
 
+
+char *file_dst;
+
 //#ifndef LIB_H
 
 /*
@@ -157,7 +160,8 @@ int main(int argc, char** argv) {
      * Setup: dst file path
  
      **************************************/
-    char *file_dst = _setup_FileName_Dst(argc, argv);
+    file_dst = _setup_FileName_Dst(argc, argv);
+//    char *file_dst = _setup_FileName_Dst(argc, argv);
     
     consolColor_Change(GREEN);
     
@@ -166,6 +170,22 @@ int main(int argc, char** argv) {
             base_name(__FILE__), __LINE__, file_dst);
 
     consolColor_Reset();
+    
+//    //test
+//    exit(-1);
+    
+//    //test
+////    char joint = '.';
+//    char *tmp = join_simple(bg_colors, (sizeof(bg_colors) / sizeof(char *)));
+////    char *tmp = join(joint, bg_colors, (sizeof(bg_colors) / sizeof(char *)));
+////    char *tmp = join(joint, direc, (sizeof(direc) / sizeof(char *)));
+//    
+//    //log
+//    printf("[%s : %d] join(bg_colors) => %s\n", base_name(__FILE__), __LINE__, tmp);
+////    printf("[%s : %d] join(direc) => %s\n", base_name(__FILE__), __LINE__, tmp);
+//
+//    
+//    exit(0);
     
     /*************************************
  
@@ -445,6 +465,12 @@ int main(int argc, char** argv) {
 //    
 //}
 
+/**************************
+ * _setup_FileName_Dst()
+ * 
+ * @return 1. option-info-appended string
+ *        2. argv[3] => if tokenizing failed
+ **************************/
 char * _setup_FileName_Dst(int argc, char **argv)
 {
     char *dst = (char *) malloc(sizeof(char) * (strlen(argv[3]) + 1));
@@ -452,7 +478,93 @@ char * _setup_FileName_Dst(int argc, char **argv)
     strcpy(dst, argv[3]);
     dst[strlen(argv[3])] = '\0';
     
+    /**************************
+     * Add info: bg_color
+     **************************/
+    char delim = '.';
+    int *num_of_tokens;
+    int position = 1;
+    
+    char **tokens = str_split_r_2
+                (dst, delim, position, num_of_tokens);
+    
+//    free(dst);
+    
+    if (tokens != NULL) {
+
+        //log
+        printf("[%s : %d] tokens[0] = %s / tokens[1] = %s\n", 
+                base_name(__FILE__), __LINE__, tokens[0], tokens[1]);
+        
+        free(dst);
+        
+        char *label = "_bg=";
+        char *bg_info = concat(label, opt_bg_color);
+        
+        // direction
+        label = "_direc=";
+        char *direc_info = concat(label, direc[opt_merge_direc]);
+        
+        //log
+        printf("[%s : %d] bg_info => %s\n", base_name(__FILE__), __LINE__, bg_info);
+
+        int size = 5;
+        
+        char **tmp = (char **) malloc(sizeof(char *) * size);
+//        char **tmp = (char **) malloc(sizeof(char *) * 4);
+        
+        char *joint_str = ".";
+        
+        tmp[0] = tokens[0];
+        tmp[1] = bg_info;
+        tmp[2] = direc_info;
+        tmp[3] = joint_str;
+        tmp[4] = tokens[1];
+
+//        //log
+//        printf("[%s : %d] tmp[1] => %s\n", base_name(__FILE__), __LINE__, tmp[1]);
+//        
+//        int size = sizeof(char *);
+////        int size = sizeof(tmp);
+////        int size = (sizeof(tmp) / sizeof(char *));
+//        
+//        //log
+//        printf("[%s : %d] size => %d\n", base_name(__FILE__), __LINE__, size);
+
+        
+        char *tmp_str = join_simple(tmp, size);
+//        char *tmp_str = join_simple(tmp, 4);
+//        char *tmp_str = join_simple(tmp, (sizeof(tmp) / sizeof(char *)));
+        
+        //log
+        printf("[%s : %d] tmp_str => %s\n", base_name(__FILE__), __LINE__, tmp_str);
+        
+        dst = tmp_str;
+        
+//        return dst;
+//        return tmp_str;
+
+        
+    } else {
+        
+        //log
+        printf("[%s : %d] tokens => NULL\n", base_name(__FILE__), __LINE__);
+        
+        dst = argv[3];
+        
+//        return dst;
+//        return argv[3];
+
+    }
+    
+    /**************************
+     * Add info: direction
+     **************************/
+    
+    
     return dst;
+    
+//    return dst;
     
 }//char * _setup_FileName_Dst(int argc, char **argv)
 

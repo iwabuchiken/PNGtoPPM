@@ -204,6 +204,10 @@ char* concat(char *, char *);
 
 int larger(int, int);
 
+char *join(char, char **, int num);
+
+char *join_simple(char **, int num);
+
 #ifdef	__cplusplus
 }
 #endif

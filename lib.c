@@ -652,3 +652,182 @@ int is_InArray
     return false;
     
 }
+
+/**************************
+ * join()
+ * 
+ * 
+ **************************/
+char *join(char joint, char **array, int num_of_elems)
+{
+    /**************************
+     * Validations
+     **************************/
+    if(array == NULL || joint == NULL) return NULL;
+    
+    /**************************
+     * Length: 1
+     **************************/
+    if(num_of_elems == 1) return array[0];
+    
+    /**************************
+     * Length: 2
+     **************************/
+    if(num_of_elems == 2) {
+        
+        char *joint_str[2];
+        
+        joint_str[0] = joint;
+        joint_str[1] = '\0';
+        
+        int len = strlen(array[0]) + strlen(array[1]) + sizeof(joint_str);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat3(array[0], joint_str, array[1]);
+//        new_string = concat(array[0], array[1]);
+        
+        new_string[len] = '\0';
+        
+        return new_string;
+        
+    }
+    
+    /**************************
+     * Length: 3
+     **************************/
+    if(num_of_elems >= 3) {
+//    if(num_of_elems == 3) {
+        
+        char *joint_str[2];
+        
+        joint_str[0] = joint;
+        joint_str[1] = '\0';
+        
+        int len = strlen(array[0]) + strlen(array[1]) + sizeof(joint_str);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat3(array[0], joint_str, array[1]);
+        
+        //log
+        printf("[%s : %d] new_string => %s\n", 
+                base_name(__FILE__), __LINE__, new_string);
+
+        
+        int i;
+        
+        for(i = 2; i < num_of_elems; i++) {
+            
+            int len = sizeof(new_string);
+            
+            char *tmp = (char *) malloc(len + 1);
+            
+            strcpy(tmp, new_string);
+            
+            tmp[len] = '\0';
+            
+            //log
+            printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+
+            
+//            int len = strlen(new_string) + strlen(array[i]) + joint_str;
+            
+//            free(new_string);
+            
+//            new_string = (char *) realloc(new_string, (len + 1));
+            new_string = concat3(new_string, joint_str, array[i]);
+            
+            
+            
+        }//for(i = 2; i < num_of_elems; i++)
+        
+        return new_string;
+        
+    }//if(num_of_elems == 3)
+    
+}//char *join(char joint, char **array, int num_of_elems)
+
+/**************************
+ * join_simple()
+ * 
+ * 
+ **************************/
+char *join_simple(char **array, int num_of_elems)
+{
+    /**************************
+     * Validations
+     **************************/
+    if(array == NULL) return NULL;
+    
+    /**************************
+     * Length: 1
+     **************************/
+    if(num_of_elems == 1) return array[0];
+    
+    /**************************
+     * Length: 2
+     **************************/
+    if(num_of_elems == 2) {
+        
+        int len = strlen(array[0]) + strlen(array[1]);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat(array[0], array[1]);
+//        new_string = concat(array[0], array[1]);
+        
+        new_string[len] = '\0';
+        
+        return new_string;
+        
+    }
+    
+    /**************************
+     * Length: 3
+     **************************/
+    if(num_of_elems >= 3) {
+        
+        int len = strlen(array[0]) + strlen(array[1]);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat(array[0], array[1]);
+        
+        //log
+        printf("[%s : %d] new_string => %s\n", 
+                base_name(__FILE__), __LINE__, new_string);
+
+        int i;
+        
+        for(i = 2; i < num_of_elems; i++) {
+            
+            int len = sizeof(new_string);
+            
+//            char *tmp = (char *) malloc(len + 1);
+//            
+//            strcpy(tmp, new_string);
+//            
+//            tmp[len] = '\0';
+//            
+//            //log
+//            printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+
+            
+//            int len = strlen(new_string) + strlen(array[i]) + joint_str;
+            
+//            free(new_string);
+            
+//            new_string = (char *) realloc(new_string, (len + 1));
+            new_string = concat(new_string, array[i]);
+//            new_string = concat3(new_string, joint_str, array[i]);
+            
+            
+            
+        }//for(i = 2; i < num_of_elems; i++)
+        
+        return new_string;
+        
+    }//if(num_of_elems == 3)
+    
+}//char *join(char joint, char **array, int num_of_elems)

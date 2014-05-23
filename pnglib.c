@@ -1704,6 +1704,82 @@ void merge_PngSrcs_Hori_General
     
 }//void merge_PngSrcs_Hori_General
 
+void merge_PngSrcs_Verti_General
+(
+    int width_A, int height_A, 
+    int width_B, int height_B, 
+    int width_C, int height_C
+)
+{
+    //log
+    printf("[%s : %d] width_A, height_A => %d, %d\n"
+            "width_B, height_B => %d, %d\n"
+            "width_C, height_C => %d, %d\n", base_name(__FILE__), __LINE__,
+            width_A, height_A,
+            width_B, height_B,
+            width_C, height_C
+            );
+
+    int x, y2, y;
+    
+    for(y = 0; y < height_A; y++) {
+        
+        png_byte *row_A = row_pointers_A[y];
+//        png_byte *row_B = row_pointers_B[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_A; x++) {
+            
+            png_byte *ptr_A = &(row_A[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_A[0];
+            ptr_C[1] = ptr_A[1];
+            ptr_C[2] = ptr_A[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+    }//for(y = 0; y < height_B; y++)
+    
+    for(y2 = 0; y < height_C; y++, y2++) {
+//    for(y2 = 0; y < height_B; y++, y2++) {
+        
+//        png_byte *row_A = row_pointers_A[y];
+        png_byte *row_B = row_pointers_B[y2];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_B; x++) {
+            
+            png_byte *ptr_B = &(row_B[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_B[0];
+            ptr_C[1] = ptr_B[1];
+            ptr_C[2] = ptr_B[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+    }//for(y = 0; y < height_B; y++)
+//    if(height_A >= height_B) {
+//        
+//        _merge_PngSrcs_Hori_General_AlargerThanB
+//                (width_A, height_A,
+//                    width_B, height_B,
+//                    width_C, height_C);
+//        
+//    } else {
+//        
+//        _merge_PngSrcs_Hori_General_AsmallerThanB
+//                (width_A, height_A,
+//                    width_B, height_B,
+//                    width_C, height_C);
+//        
+//    }
+    
+}//void merge_PngSrcs_Verti_General
+
 void _merge_PngSrcs_Hori_General_AlargerThanB
 (
         int width_A, int height_A,

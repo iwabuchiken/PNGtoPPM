@@ -628,7 +628,7 @@ char get_FileSeparator()
 
 }
 
-int max(int x, int y)
+int larger(int x, int y)
 {
     return (x >= y) ? x : y;
     

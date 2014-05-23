@@ -152,6 +152,13 @@ extern "C" {
         int, int
     );
     
+    void merge_PngSrcs_Verti_General
+    (
+        int, int, 
+        int, int, 
+        int, int
+    );
+    
     void _merge_PngSrcs_Hori_General_AlargerThanB
     (
         int, int, 

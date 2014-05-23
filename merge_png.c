@@ -83,6 +83,11 @@ extern png_bytep * row_pointers_A;
 extern png_bytep * row_pointers_B;
 extern png_bytep * row_pointers_C;
 
+/**************************
+ * main()
+ * 
+ * exit -3 => unknown opt_merge_direc value
+ **************************/
 
 int main(int argc, char** argv) {
 
@@ -260,21 +265,57 @@ int main(int argc, char** argv) {
      * 2. depth => same as 1
  
      **************************************/
-    width_C = width_A + width_B;
-    height_C = max(height_A, height_B);
-//    height_C = height_A + height_B;
-    
-    color_type_C = color_type_A;
-    bit_depth_C = bit_depth_A;
-    
-    png_ptr_C->width = width_C;
-    png_ptr_C->height = height_C;
-    
-    png_ptr_C->color_type = png_ptr_A->color_type;
-    png_ptr_C->bit_depth = png_ptr_A->bit_depth;
-    
-    png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
-    info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
+    if(opt_merge_direc == 1) {          // 1: horizontal
+        
+        width_C = width_A + width_B;
+        height_C = larger(height_A, height_B);
+    //    height_C = height_A + height_B;
+
+        color_type_C = color_type_A;
+        bit_depth_C = bit_depth_A;
+
+        png_ptr_C->width = width_C;
+        png_ptr_C->height = height_C;
+
+        png_ptr_C->color_type = png_ptr_A->color_type;
+        png_ptr_C->bit_depth = png_ptr_A->bit_depth;
+
+        png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
+        info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
+        
+    } else if(opt_merge_direc == 0) {   // 0: vertical
+        
+        width_C = larger(width_A, width_B);
+        height_C = height_A + height_B;
+    //    height_C = height_A + height_B;
+
+        color_type_C = color_type_A;
+        bit_depth_C = bit_depth_A;
+
+        png_ptr_C->width = width_C;
+        png_ptr_C->height = height_C;
+
+        png_ptr_C->color_type = png_ptr_A->color_type;
+        png_ptr_C->bit_depth = png_ptr_A->bit_depth;
+
+        png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
+        info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
+    }
+//    width_C = width_A + width_B;
+//    height_C = larger(height_A, height_B);
+////    height_C = height_A + height_B;
+//    
+//    color_type_C = color_type_A;
+//    bit_depth_C = bit_depth_A;
+//    
+//    png_ptr_C->width = width_C;
+//    png_ptr_C->height = height_C;
+//    
+//    png_ptr_C->color_type = png_ptr_A->color_type;
+//    png_ptr_C->bit_depth = png_ptr_A->bit_depth;
+//    
+//    png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
+//    info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
     
     /*************************************
  
@@ -320,11 +361,32 @@ int main(int argc, char** argv) {
  
      **************************************/
 //    merge_PngSrcs(
-    merge_PngSrcs_Hori_General(
-            width_A, height_A,
-            width_B, height_B,
-            width_C, height_C
-            );
+    // 1: hori, 0: verti
+    if(opt_merge_direc == 1) {          // 1: horizontal
+        
+        merge_PngSrcs_Hori_General(
+                width_A, height_A,
+                width_B, height_B,
+                width_C, height_C
+                );
+        
+    } else if(opt_merge_direc == 0) {   // 0: vertical
+        
+        merge_PngSrcs_Verti_General(
+                width_A, height_A,
+                width_B, height_B,
+                width_C, height_C
+                );
+        
+    } else {
+        
+        //log
+        printf("[%s : %d] Unknown direction value => %d\n", 
+                base_name(__FILE__), __LINE__, opt_merge_direc);
+
+        exit(-3);
+        
+    }
     
     /*************************************
  

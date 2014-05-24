@@ -140,6 +140,39 @@ int main(int argc, char** argv) {
     //log
     printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
 
+    char *log_file_path = "./log/exec_log.txt";
+    
+    FILE *fp;
+    
+    if((fp = fopen(log_file_path, "a")) == NULL) {
+        
+        //log
+        printf("[%s : %d] Can't open the log file: %s\n", 
+                base_name(__FILE__), __LINE__, log_file_path);
+        
+        exit(-1);
+
+    }
+    
+    fprintf(fp, "[%s]\n", time_label);
+//    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
+    
+    fprintf(fp, "%s\n", "<argv>");
+    
+    fprintf(fp, "%s\n", argv_str);
+    
+//    char *CR = "\n";
+//    
+//    fwrite(CR, 1, sizeof(CR), fp);
+//    fwrite('\n', 1, sizeof(char), fp);
+    
+    fputc('\n', fp);
+    
+    fclose(fp);
+    
+    //log
+    printf("[%s : %d] file => closed\n", base_name(__FILE__), __LINE__);
+
     
 //    //log
 //    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);

@@ -915,6 +915,7 @@ char *join_simple(char **array, int num_of_elems)
 
 char *get_TimeLabel_Now(TimeLabelType type)
 {
+    //REF http://www.cplusplus.com/reference/ctime/localtime/
     time_t rawtime;
     struct tm * timeinfo;
 

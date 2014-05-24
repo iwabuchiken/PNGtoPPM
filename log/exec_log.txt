@@ -1,0 +1,10 @@
+[2014:05:24 23:51:42]
+./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/latin_jazz.png images/merge-process-1.png -proc -rgb 0,100,0 -src images/download-jpg.copy.png -dst images/download-jpg.copy.processed-7.png
+
+[2014:05:24 23:52:03]
+./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/latin_jazz.png images/merge-process-1.png -proc -rgb 0,100,0 -src images/download-jpg.copy.png -dst images/download-jpg.copy.processed-7.png
+
+[2014:05:24 23:52:52]
+<argv>
+./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/latin_jazz.png images/merge-process-1.png -proc -rgb 0,100,0 -src images/download-jpg.copy.png -dst images/download-jpg.copy.processed-7.png
+

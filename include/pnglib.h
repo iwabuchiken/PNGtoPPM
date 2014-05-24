@@ -49,6 +49,19 @@ typedef unsigned long   ulg;  // readpng.h
 #define PIXEL_WHITE    100, 100, 100
 #define PIXEL_BLACK    0, 0, 0
 
+/////////////////////////////////////////
+
+// enums
+
+/////////////////////////////////////////
+typedef enum {
+    
+    rgb
+    
+} ProcMode;
+
+
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -117,6 +130,10 @@ extern "C" {
         int *, int *,
         png_byte *, png_byte *);
     
+    void _test_WritePng__Process
+    (char*, png_structp, png_infop,
+        int *, int *, png_byte *, png_byte *);
+    
     void _test_WritePng_Merge
     (char*, png_structp, png_infop,
         int *, int *,
@@ -175,6 +192,17 @@ extern "C" {
 
     void init_Row_Pointers_C
     (png_structp, png_infop, char *);
+    
+    void init_Row_Pointers_B
+    (png_structp, png_infop);
+    
+    void _test_ReadPng__Process
+    (char*, png_structp, png_infop,
+    int *, int *, int *, png_byte *, png_byte *);
+  
+    void process_file__RGB
+//    (png_structp, png_structp, int *[3], ProcMode);
+    (png_structp, png_structp, int **, ProcMode);
     
 #ifdef	__cplusplus
 }

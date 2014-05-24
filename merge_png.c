@@ -14,6 +14,7 @@
 #ifndef PNGLIB_H
 //#include "include/pnglib.h"
 #include "include/pnglib.h"
+//#include "include/pnglib.h"
 #include "include/pnginfo.h"
 #endif
 
@@ -1171,55 +1172,61 @@ void process_Mode(int argc, char **argv)
             base_name(__FILE__), __LINE__, file_dst);
 
     consolColor_Reset();
-//    
+    
 //    /*************************************
 // 
 //     * Get: png info
 // 
 //     **************************************/
 //    get_PngInfo
-//    (file_srcs[0], png_ptr_A, info_ptr_A,
+//    (file_src, png_ptr_A, info_ptr_A,
 //        &width_A, &height_A, &number_of_passes_A,
 //        &color_type_A, &bit_depth_A);
 //    
+//    
+//    //log
+//    printf("[%s : %d] info_ptr_A->width => %d\n", 
+//            base_name(__FILE__), __LINE__, info_ptr_A->width);
+
+    
 //    get_PngInfo
 //    (file_srcs[1], png_ptr_B, info_ptr_B,
 //        &width_B, &height_B, &number_of_passes_B,
 //        &color_type_B, &bit_depth_B);
-//    
+    
 //    /*************************************
 // 
 //     * tests
 // 
 //     **************************************/
 //    
-//    /*************************************
-// 
-//     * setup: vars
-// 
-//     **************************************/
-//    // png_ptr_A
-//    png_ptr_A = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-//
-//    if (!png_ptr_A)
-//            abort_("[read_png_file] png_create_read_struct failed");
-//    
-//    // info_ptr_A
-//    info_ptr_A = png_create_info_struct(png_ptr_A);
-//    if (!info_ptr_A)
-//            abort_("[read_png_file] png_create_info_struct failed");
-//
-//    // png_ptr_B
-//    png_ptr_B = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-//
-//    if (!png_ptr_B)
-//            abort_("[read_png_file] png_create_read_struct failed");
-//    
-//    // info_ptr_B
-//    info_ptr_B = png_create_info_struct(png_ptr_B);
-//    if (!info_ptr_B)
-//            abort_("[read_png_file] png_create_info_struct failed");
-//
+    /*************************************
+ 
+     * setup: vars
+ 
+     **************************************/
+    // png_ptr_A
+    png_ptr_A = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr_A)
+            abort_("[read_png_file] png_create_read_struct failed");
+    
+    // info_ptr_A
+    info_ptr_A = png_create_info_struct(png_ptr_A);
+    if (!info_ptr_A)
+            abort_("[read_png_file] png_create_info_struct failed");
+
+    // png_ptr_B
+    png_ptr_B = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr_B)
+            abort_("[read_png_file] png_create_read_struct failed");
+    
+    // info_ptr_B
+    info_ptr_B = png_create_info_struct(png_ptr_B);
+    if (!info_ptr_B)
+            abort_("[read_png_file] png_create_info_struct failed");
+
 //    // png_ptr_C
 //    png_ptr_C = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 //
@@ -1230,64 +1237,109 @@ void process_Mode(int argc, char **argv)
 //    info_ptr_C = png_create_info_struct(png_ptr_C);
 //    if (!info_ptr_C)
 //            abort_("[read_png_file] png_create_info_struct failed");
-//
-//            
-//    consolColor_Change(LIGHT_YELLOW);
-//
-//    //log
-//    printf("[%s : %d] setup: vars => done\n", base_name(__FILE__), __LINE__);
-//
-//    consolColor_Reset();
-//    
-//    /*************************************
-// 
-//     * read png
-// 
-//     **************************************/
-//    _test_ReadPng_Merge
-//    (file_srcs[0], png_ptr_A, info_ptr_A,
-//        &width_A, &height_A, &number_of_passes_A,
-//            &color_type_A, &bit_depth_A, 1);
-//
-//    _test_ReadPng_Merge
-//    (file_srcs[1], png_ptr_B, info_ptr_B,
-//        &width_B, &height_B, &number_of_passes_B,
-//            &color_type_B, &bit_depth_B, 2);
-//
-//    consolColor_Change(LIGHT_YELLOW);
-//
+
+            
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] setup: vars => done\n", base_name(__FILE__), __LINE__);
+
+    consolColor_Reset();
+//   
+    /*************************************
+ 
+     * Get: png info
+ 
+     **************************************/
+    get_PngInfo
+    (file_src, png_ptr_A, info_ptr_A,
+        &width_A, &height_A, &number_of_passes_A,
+        &color_type_A, &bit_depth_A);
+    
+    
+    //log
+    printf("[%s : %d] info_ptr_A->width => %d\n", 
+            base_name(__FILE__), __LINE__, info_ptr_A->width);
+
+    
+    /*************************************
+ 
+     * read png
+ 
+     **************************************/
+    _test_ReadPng__Process
+    (file_src, png_ptr_A, info_ptr_A,
+        &width_A, &height_A, &number_of_passes_A,
+            &color_type_A, &bit_depth_A);
+
+    consolColor_Change(LIGHT_YELLOW);
+
 //    //log
 //    printf("[%s : %d] read png => done\n", base_name(__FILE__), __LINE__);
-//
-//    
-//    consolColor_Reset();
-//
-//    /*************************************
-// 
-//     * Build: dst png info
-//     * 
-//     * 1. color type => use that of file A
-//     * 2. depth => same as 1
-// 
-//     **************************************/
+
+    //log
+    printf("[%s : %d] png_ptr_A->width => %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_A->width);
+    printf("[%s : %d] width_A => %d\n", 
+            base_name(__FILE__), __LINE__, width_A);
+
+    
+    consolColor_Reset();
+
+    /*************************************
+ 
+     * Build: dst png info
+     * 
+     * 1. color type => use that of file A
+     * 2. depth => same as 1
+ 
+     **************************************/
 //    if(opt_merge_direc == 1) {          // 1: horizontal
-//        
-//        width_C = width_A + width_B;
-//        height_C = larger(height_A, height_B);
-//    //    height_C = height_A + height_B;
+        
+    // png_ptr_B
+    width_B = width_A;
+    height_B = height_A;
+//    height_C = height_A + height_B;
+
+    color_type_B = color_type_A;
+    bit_depth_B = bit_depth_A;
+
+    png_ptr_B->width = width_B;
+    png_ptr_B->height = height_B;
+    png_ptr_B->color_type = color_type_B;
+    
+    info_ptr_B->rowbytes = info_ptr_A->rowbytes;
+
+    // png_ptr_A
+    png_ptr_A->width = width_A;
+    png_ptr_A->height = height_A;
+    png_ptr_A->color_type = color_type_A;
+    
+//    info_ptr_B->rowbytes = info_ptr_A->rowbytes;
+
+//    png_ptr_C->color_type = png_ptr_A->color_type;
+//    png_ptr_C->bit_depth = png_ptr_A->bit_depth;
 //
-//        color_type_C = color_type_A;
-//        bit_depth_C = bit_depth_A;
-//
-//        png_ptr_C->width = width_C;
-//        png_ptr_C->height = height_C;
-//
-//        png_ptr_C->color_type = png_ptr_A->color_type;
-//        png_ptr_C->bit_depth = png_ptr_A->bit_depth;
-//
-//        png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
-//        info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
-//        
+//    png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
+        
+    
+//    //log
+//    printf("[%s : %d] png_ptr_A->width, png_ptr_A->height => %d, %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
+//    printf("[%s : %d] png_ptr_B->width, png_ptr_B->height => %d, %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_B->width, png_ptr_B->height);
+//    printf("[%s : %d] info_ptr_B->rowbytes => %d\n", 
+//            base_name(__FILE__), __LINE__, info_ptr_B->rowbytes);
+//    
+//    printf("[%s : %d] png_ptr_B->color_type => %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_B->color_type);
+//    printf("[%s : %d] color_type_B => %d\n", 
+//            base_name(__FILE__), __LINE__, color_type_B);
+    
+    
+    init_Row_Pointers_B(png_ptr_B, info_ptr_B);
+    
+    
 //    } else if(opt_merge_direc == 0) {   // 0: vertical
 //        
 //        width_C = larger(width_A, width_B);
@@ -1306,20 +1358,31 @@ void process_Mode(int argc, char **argv)
 //        png_ptr_C->rowbytes = png_ptr_A->rowbytes + png_ptr_B->rowbytes;
 //        info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
 //    }
-//
-//    /*************************************
-// 
-//     * process file
-// 
-//     **************************************/
-////    //log
-////    
-////     process_file(png_ptr_Src, info_ptr, width, height);
-//////     process_file(width, height);
-////     
-////     //log
-////    printf("[%s : %d] process => done\n", base_name(__FILE__), __LINE__);
-//
+
+    /*************************************
+ 
+     * process file
+ 
+     **************************************/
+    //log
+    ProcMode process_mode = rgb;
+    
+    process_file__RGB(png_ptr_A, png_ptr_B, RGB, process_mode);
+//     process_file(width, height);
+    
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] process => done\n",
+            base_name(__FILE__), __LINE__);
+
+    consolColor_Reset();
+    
+    
+    
+//     //log
+//    printf("[%s : %d] process => done\n", base_name(__FILE__), __LINE__);
+
 //    /*************************************
 // 
 //     * init: row_pointers_C (dst png)
@@ -1378,37 +1441,25 @@ void process_Mode(int argc, char **argv)
 //        
 //    }
 //    
-//    /*************************************
-// 
-//     * write png
-// 
-//     **************************************/
-//    //log
-//    printf("[%s : %d] png_get_rowbytes(png_ptr_C,info_ptr_C) => %d\n",
-//            base_name(__FILE__), __LINE__, png_get_rowbytes(png_ptr_C,info_ptr_C));
-//
-//    
-//    
-//    //log
-//    printf("[%s : %d] png_ptr_C->color_type = %d\n", 
-//            base_name(__FILE__), __LINE__, png_ptr_C->color_type);
-//
-//    
-//    
-//    _test_WritePng_Merge
-//    (file_dst, png_ptr_C, info_ptr_C,
-//        &width_C, &height_C,
-//        &color_type_C, &bit_depth_C, 3);
-//    
-////    _test_WritePng_Rgba
-////    (file_path_dst, png_ptr_Dst, info_ptr_Dst,
-////        &width_Dst, &height_Dst,
-////        &color_type_Dst, &bit_depth_Dst);
-//    
-//    //log
-//    printf("[%s : %d] _test_WritePng() => done\n", base_name(__FILE__), __LINE__);
-//
-//    
+    /*************************************
+ 
+     * write png
+ 
+     **************************************/
+    _test_WritePng__Process
+    (file_dst, png_ptr_B, info_ptr_B,
+        &width_B, &height_B,
+        &color_type_B, &bit_depth_B);
+    
+//    _test_WritePng_Rgba
+//    (file_path_dst, png_ptr_Dst, info_ptr_Dst,
+//        &width_Dst, &height_Dst,
+//        &color_type_Dst, &bit_depth_Dst);
+    
+    //log
+    printf("[%s : %d] _test_WritePng() => done\n", base_name(__FILE__), __LINE__);
+
+    
     //log
     printf("[%s : %d] done\n", base_name(__FILE__), __LINE__);
 

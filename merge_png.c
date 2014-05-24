@@ -120,6 +120,37 @@ int main(int argc, char** argv) {
     }
     
     /**************************
+     * Log: command line input
+     **************************/
+    char *time_label = get_TimeLabel_Now(STANDARD);
+    
+    //log
+    printf("[%s : %d] time_label => %s\n", 
+            base_name(__FILE__), __LINE__, time_label);
+
+    
+    //log
+    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
+
+    char joint = ' ';
+    
+    char *argv_str = join(joint, argv, argc);
+//    char *argv_str = join(" ", argv, argc);
+    
+    //log
+    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
+
+    
+//    //log
+//    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);
+//
+//    
+//    get_TimeLabel_Now(SEC);
+//    
+//    
+    exit(-1);
+    
+    /**************************
      * Processing mode?
      **************************/
     int res_i = _Is_ProcessMode(argc, argv);

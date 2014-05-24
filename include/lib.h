@@ -79,6 +79,21 @@ extern "C" {
 #include <string.h>
 #endif
 
+#ifndef TIME_H
+#define TIME_H
+#include <time.h>
+#endif
+
+#ifndef LOCALE_H
+#define LOCALE_H
+#include <locale.h>
+#endif
+    
+#ifndef SYS_TIME_H
+#define SYS_TIME_H
+#include <sys/time.h>
+#endif
+    
 ///////////////////////////////////////////////////////
 
 // Defines
@@ -162,6 +177,12 @@ typedef enum
 
 } RetVals;
 
+typedef enum {
+    
+    STANDARD, SERIAL, SEC
+    
+} TimeLabelType;
+
 ///////////////////////////////////////////////////////
 
 // Prototypes
@@ -207,6 +228,8 @@ int larger(int, int);
 char *join(char, char **, int num);
 
 char *join_simple(char **, int num);
+
+char *get_TimeLabel_Now(TimeLabelType);
 
 #ifdef	__cplusplus
 }

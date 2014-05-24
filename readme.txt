@@ -23,6 +23,8 @@ pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/
 /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/download-jpg.copy-6.png images/download-jpg.merged-6.png
 ./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/download-jpg.copy-6.png images/download-jpg.merged-6.png
 
+#merge_png.c => threshold 24/05/2014 17:01:53
+./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images/latin_jazz.png images/merge-process-1.png -proc -rgb 0,100,0 -src images/download-jpg.copy.png -dst images/download-jpg.copy.processed-6.png
 
 ./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.png images/download-jpg.copy.png
 ------------------------

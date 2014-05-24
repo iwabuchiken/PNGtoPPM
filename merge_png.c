@@ -80,7 +80,8 @@ int _Is_ProcessMode(int, char **);
 void process_Mode(int, char **);
 void set_Options_Process(char **);
 int set_Options_Process_RGB(char **);
-char ** _setup_FileName_Src__Process(int, char **);
+char * _setup_FileName_Src__Process(int, char **);
+char * _setup_FileName_Dst__Process(int, char **);
 
 /*************************************
  
@@ -731,7 +732,7 @@ char ** _setup_FileName_Src(int argc, char **argv)
     
 }
 
-char ** _setup_FileName_Src__Process(int argc, char **argv)
+char * _setup_FileName_Src__Process(int argc, char **argv)
 {
     char *file_src;
     
@@ -785,6 +786,139 @@ char ** _setup_FileName_Src__Process(int argc, char **argv)
     
     // return
     return file_src;
+    
+}
+
+char * _setup_FileName_Dst__Process(int argc, char **argv)
+{
+    char *file_dst;
+    
+    int i = 0;
+    int flag = false;   // true if "-rgb" values given
+    
+    while(*(argv + i) != NULL) {
+        
+        if(!strcmp(*(argv + i), "-dst")) {
+            
+            i ++;
+            
+            if(*(argv + i) != NULL) {
+                
+                int len = strlen(*(argv + i));
+                
+                file_dst = (char *) malloc(sizeof(char) * (len + 1));
+                
+                strcpy(file_dst, *(argv + i));
+                
+                file_dst[len] = '\0';
+                
+                flag = true;
+                
+                break;
+                
+            } else {
+                
+                //log
+                printf("[%s : %d] value not given for \"-src\"\n", 
+                        base_name(__FILE__), __LINE__);
+
+                exit(-1);
+                
+            }
+            
+        }
+        
+        i ++;
+        
+    }//while(*(argv + i) != NULL)
+
+    if(flag == false) {
+        
+        //log
+        printf("[%s : %d] \"-dst\" option not given\n", base_name(__FILE__), __LINE__);
+        
+        exit(-1);
+
+    }
+    
+    /**************************
+     * Add info: RGB
+     **************************/
+    char delim = '.';
+    int *num_of_tokens;
+    int position = 1;
+    
+    char **tokens = str_split_r_2
+                (file_dst, delim, position, num_of_tokens);
+    
+    if (tokens != NULL) {
+
+        //log
+        printf("[%s : %d] tokens[0] = %s / tokens[1] = %s\n", 
+                base_name(__FILE__), __LINE__, tokens[0], tokens[1]);
+        
+        free(file_dst);
+        
+        char *label = "_rgb=";
+        
+        char *rgb_info = (char *) malloc(sizeof(char) * (11 + 1));
+        
+        sprintf(rgb_info, "%d,%d,%d", RGB[0], RGB[1], RGB[2]);
+        
+        rgb_info = concat(label, rgb_info);
+//        char *bg_info = concat(label, opt_bg_color);
+        
+//        // direction
+//        label = "_direc=";
+//        char *direc_info = concat(label, direc[opt_merge_direc]);
+//        
+//        //log
+//        printf("[%s : %d] bg_info => %s\n", base_name(__FILE__), __LINE__, bg_info);
+
+        int size = 4;
+        
+        char **tmp = (char **) malloc(sizeof(char *) * size);
+//        char **tmp = (char **) malloc(sizeof(char *) * 4);
+        
+        char *joint_str = ".";
+        
+        tmp[0] = tokens[0];
+        tmp[1] = rgb_info;
+        tmp[2] = joint_str;
+        tmp[3] = tokens[1];
+        
+        char *tmp_str = join_simple(tmp, size);
+//        char *tmp_str = join_simple(tmp, 4);
+//        char *tmp_str = join_simple(tmp, (sizeof(tmp) / sizeof(char *)));
+        
+        //log
+        printf("[%s : %d] tmp_str => %s\n", base_name(__FILE__), __LINE__, tmp_str);
+        
+        file_dst = tmp_str;
+        
+//        return dst;
+//        return tmp_str;
+
+        
+    } else {
+        
+        consolColor_Change(RED);
+
+        //log
+        printf("[%s : %d] tokens => NULL\n",
+                base_name(__FILE__), __LINE__);
+
+        consolColor_Reset();
+        
+        exit(-1);
+        
+//        return dst;
+//        return argv[3];
+
+    }
+    
+    // return
+    return file_dst;
     
 }
 
@@ -999,7 +1133,13 @@ void process_Mode(int argc, char **argv)
      **************************/
     set_Options_Process(argv);
     
+    consolColor_Change(GREEN);
     
+    //log
+    printf("[%s : %d] RGB => set (%d,%d,%d)\n",
+            base_name(__FILE__), __LINE__, RGB[0], RGB[1], RGB[2]);
+    
+    consolColor_Reset();
     
     /*************************************aaaaaa
  
@@ -1015,22 +1155,22 @@ void process_Mode(int argc, char **argv)
             base_name(__FILE__), __LINE__, file_src);
     
     consolColor_Reset();
-//    
-//    /*************************************
-// 
-//     * Setup: dst file path
-// 
-//     **************************************/
-//    file_dst = _setup_FileName_Dst(argc, argv);
-////    char *file_dst = _setup_FileName_Dst(argc, argv);
-//    
-//    consolColor_Change(GREEN);
-//    
-//    //log
-//    printf("[%s : %d] file_dst = %s\n",
-//            base_name(__FILE__), __LINE__, file_dst);
-//
-//    consolColor_Reset();
+    
+    /*************************************
+ 
+     * Setup: dst file path
+ 
+     **************************************/
+    file_dst = _setup_FileName_Dst__Process(argc, argv);
+//    char *file_dst = _setup_FileName_Dst(argc, argv);
+    
+    consolColor_Change(GREEN);
+    
+    //log
+    printf("[%s : %d] file_dst = %s\n",
+            base_name(__FILE__), __LINE__, file_dst);
+
+    consolColor_Reset();
 //    
 //    /*************************************
 // 
@@ -1273,8 +1413,8 @@ void process_Mode(int argc, char **argv)
     printf("[%s : %d] done\n", base_name(__FILE__), __LINE__);
 
     
-    return (EXIT_SUCCESS);    
-}
+//    return (EXIT_SUCCESS);    
+}//void process_Mode(int argc, char **argv)
 
 void set_Options_Process(char **argv)
 {
@@ -1337,16 +1477,16 @@ int set_Options_Process_RGB(char **argv)
             
             int num;
             
-            //log
-            printf("[%s : %d] *(argv + i) => %s\n", 
-                    base_name(__FILE__), __LINE__, *(argv + i));
+//            //log
+//            printf("[%s : %d] *(argv + i) => %s\n", 
+//                    base_name(__FILE__), __LINE__, *(argv + i));
 
             char **tokens = str_split_3(*(argv + i), delim, &num);
 //            char *tokens = str_split_3(*(argv + i), delim, &num);
             
-            //log
-            printf("[%s : %d] back from => str_split_3()\n", 
-                    base_name(__FILE__), __LINE__);
+//            //log
+//            printf("[%s : %d] back from => str_split_3()\n", 
+//                    base_name(__FILE__), __LINE__);
             
             if(tokens == NULL) {
                 
@@ -1366,8 +1506,8 @@ int set_Options_Process_RGB(char **argv)
                 
             }//if(tokens == NULL)
             
-            //log
-            printf("[%s : %d] num => %d\n", base_name(__FILE__), __LINE__, num);
+//            //log
+//            printf("[%s : %d] num => %d\n", base_name(__FILE__), __LINE__, num);
 
             /**************************
              * Set: RGB values

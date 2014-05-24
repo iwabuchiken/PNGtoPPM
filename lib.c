@@ -190,15 +190,15 @@ char** str_split_3
 
     char* token;
 
-    //log
-    printf("[%s : %d] a_delim => %c\n", 
-            base_name(__FILE__), __LINE__, a_delim);
-    
-    //log
-    printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
-
-    //log
-    printf("[%s : %d] a_str => %s\n", base_name(__FILE__), __LINE__, a_str);
+//    //log
+//    printf("[%s : %d] a_delim => %c\n", 
+//            base_name(__FILE__), __LINE__, a_delim);
+//    
+//    //log
+//    printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+//
+//    //log
+//    printf("[%s : %d] a_str => %s\n", base_name(__FILE__), __LINE__, a_str);
 
 
     /************************************
@@ -211,9 +211,9 @@ char** str_split_3
     a_str_new = (char *) malloc(sizeof(char) * (strlen(a_str) + 1));
 //    a_str_new = malloc(sizeof(char) * (strlen(a_str) + 1));
     
-    //log
-    printf("[%s:%d] malloc => done for a_str_new (a_str=%s)\n",
-	    base_name(__FILE__), __LINE__, a_str);
+//    //log
+//    printf("[%s:%d] malloc => done for a_str_new (a_str=%s)\n",
+//	    base_name(__FILE__), __LINE__, a_str);
 
     if (a_str_new == NULL) {
 
@@ -224,16 +224,16 @@ char** str_split_3
 
     } else {
 
-	    //log
-	    printf("[%s:%d] malloc done for => a_str_new\n", base_name(__FILE__), __LINE__);
+//	    //log
+//	    printf("[%s:%d] malloc done for => a_str_new\n", base_name(__FILE__), __LINE__);
 
 
     }
 
     strcpy(a_str_new, a_str);
 
-    //log
-    printf("[%s : %d] strcpy => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] strcpy => done\n", base_name(__FILE__), __LINE__);
 
     
     while (*tmp)
@@ -261,9 +261,9 @@ char** str_split_3
 
     }
 
-    //log
-    printf("[%s : %d] count >= 1 (count = %d)\n", 
-            base_name(__FILE__), __LINE__, count);
+//    //log
+//    printf("[%s : %d] count >= 1 (count = %d)\n", 
+//            base_name(__FILE__), __LINE__, count);
 
     
     // Input value to the param 'num'
@@ -289,8 +289,8 @@ char** str_split_3
 
     }
     
-    //log
-    printf("[%s : %d] malloc => done for 'result'\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] malloc => done for 'result'\n", base_name(__FILE__), __LINE__);
 
     if (result)
     {
@@ -306,8 +306,8 @@ char** str_split_3
 
             *(result + idx++) = strdup(token);
 
-            //log
-            printf("[%s:%d] token => %s\n", base_name(__FILE__), __LINE__, token);
+//            //log
+//            printf("[%s:%d] token => %s\n", base_name(__FILE__), __LINE__, token);
 
 
             token = strtok(0, delim);
@@ -322,8 +322,8 @@ char** str_split_3
 
     }//if (result)
 
-    //log
-    printf("[%s : %d] tokenize => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] tokenize => done\n", base_name(__FILE__), __LINE__);
 
     return result;
 

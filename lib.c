@@ -162,6 +162,8 @@ void consolColor_Reset(void)
 
 	@param
 		num => Number of tokes obtained: for return purpose
+ *      @return
+ *              NULL    => split count is < 1
 ************************************/
 char** str_split_3
 (char* a_str, const char a_delim, int *num)
@@ -187,6 +189,17 @@ char** str_split_3
     char* last_comma = 0;
 
     char* token;
+
+    //log
+    printf("[%s : %d] a_delim => %c\n", 
+            base_name(__FILE__), __LINE__, a_delim);
+    
+    //log
+    printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+
+    //log
+    printf("[%s : %d] a_str => %s\n", base_name(__FILE__), __LINE__, a_str);
+
 
     /************************************
      * operations
@@ -249,7 +262,8 @@ char** str_split_3
     }
 
     //log
-    printf("[%s : %d] count >= 1\n", base_name(__FILE__), __LINE__);
+    printf("[%s : %d] count >= 1 (count = %d)\n", 
+            base_name(__FILE__), __LINE__, count);
 
     
     // Input value to the param 'num'
@@ -276,10 +290,7 @@ char** str_split_3
     }
     
     //log
-    printf("[%s : %d] malloc => done\n", base_name(__FILE__), __LINE__);
-
-
-
+    printf("[%s : %d] malloc => done for 'result'\n", base_name(__FILE__), __LINE__);
 
     if (result)
     {
@@ -295,8 +306,8 @@ char** str_split_3
 
             *(result + idx++) = strdup(token);
 
-//            //log
-//			printf("[%s:%d] token => %s\n", base_name(__FILE__), __LINE__, token);
+            //log
+            printf("[%s:%d] token => %s\n", base_name(__FILE__), __LINE__, token);
 
 
             token = strtok(0, delim);
@@ -313,31 +324,6 @@ char** str_split_3
 
     //log
     printf("[%s : %d] tokenize => done\n", base_name(__FILE__), __LINE__);
-
-    
-//    if(result) {
-//
-//    	int i;
-//
-//    	for (i = 0; *(result + i); ++i) {
-//
-//    		//log
-//			printf("[%s:%d] tokens[%d] => %s\n",
-//					base_name(__FILE__), __LINE__, i, *(result + i));
-//
-//		}
-//
-//    }//if(result)
-
-//    //log
-//    while(*result) {
-//
-//    	//log
-//		printf("[%s:%d] *result => %s\n", base_name(__FILE__), __LINE__, *result);
-//
-//		result ++;
-//
-//    }
 
     return result;
 

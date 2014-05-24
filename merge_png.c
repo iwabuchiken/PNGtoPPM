@@ -80,6 +80,7 @@ int _Is_ProcessMode(int, char **);
 void process_Mode(int, char **);
 void set_Options_Process(char **);
 int set_Options_Process_RGB(char **);
+char ** _setup_FileName_Src__Process(int, char **);
 
 /*************************************
  
@@ -730,6 +731,63 @@ char ** _setup_FileName_Src(int argc, char **argv)
     
 }
 
+char ** _setup_FileName_Src__Process(int argc, char **argv)
+{
+    char *file_src;
+    
+    int i = 0;
+    int flag = false;   // true if "-rgb" values given
+    
+    while(*(argv + i) != NULL) {
+        
+        if(!strcmp(*(argv + i), "-src")) {
+            
+            i ++;
+            
+            if(*(argv + i) != NULL) {
+                
+                int len = strlen(*(argv + i));
+                
+                file_src = (char *) malloc(sizeof(char) * (len + 1));
+                
+                strcpy(file_src, *(argv + i));
+                
+                file_src[len] = '\0';
+                
+                flag = true;
+                
+                break;
+                
+            } else {
+                
+                //log
+                printf("[%s : %d] value not given for \"-src\"\n", 
+                        base_name(__FILE__), __LINE__);
+
+                exit(-1);
+                
+            }
+            
+        }
+        
+        i ++;
+        
+    }//while(*(argv + i) != NULL)
+
+    if(flag == false) {
+        
+        //log
+        printf("[%s : %d] \"-src\" option not given\n", base_name(__FILE__), __LINE__);
+        
+        exit(-1);
+
+    }
+    
+    // return
+    return file_src;
+    
+}
+
 void show_help(void)
 {
     char *msg = "<Usage>\n"
@@ -942,35 +1000,21 @@ void process_Mode(int argc, char **argv)
     set_Options_Process(argv);
     
     
-    //test
-    int i;
     
-    for (i = 0; i < 3; i++) {
-
-        //log
-        printf("[%s : %d] RGB[%d] = %d\n", base_name(__FILE__), __LINE__, i, RGB[i]);
-
-    }
+    /*************************************aaaaaa
+ 
+     * Setup: source file path
+ 
+     **************************************/
+    char *file_src = _setup_FileName_Src__Process(argc, argv);
     
+    consolColor_Change(GREEN);
     
-//    exit(1);
-//    
-//    /*************************************
-// 
-//     * Setup: source file path
-// 
-//     **************************************/
-//    char **file_srcs = _setup_FileName_Src(argc, argv);
-//    
-//    consolColor_Change(GREEN);
-//    
-//    //log
-//    printf("[%s : %d] file_srcs[0] = %s\n",
-//            base_name(__FILE__), __LINE__, file_srcs[0]);
-//    printf("[%s : %d] file_srcs[1] = %s\n",
-//            base_name(__FILE__), __LINE__, file_srcs[1]);
-//
-//    consolColor_Reset();
+    //log
+    printf("[%s : %d] file_src = %s\n",
+            base_name(__FILE__), __LINE__, file_src);
+    
+    consolColor_Reset();
 //    
 //    /*************************************
 // 

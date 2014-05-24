@@ -1365,7 +1365,8 @@ void process_Mode(int argc, char **argv)
  
      **************************************/
     //log
-    ProcMode process_mode = rgb;
+    ProcMode process_mode = threshold;
+//    ProcMode process_mode = rgb;
     
     process_file__RGB(png_ptr_A, png_ptr_B, RGB, process_mode);
 //     process_file(width, height);

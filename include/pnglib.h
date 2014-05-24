@@ -56,7 +56,7 @@ typedef unsigned long   ulg;  // readpng.h
 /////////////////////////////////////////
 typedef enum {
     
-    rgb
+    rgb, threshold
     
 } ProcMode;
 

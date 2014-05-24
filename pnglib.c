@@ -2117,8 +2117,8 @@ void _merge_PngSrcs_Hori_General_AsmallerThanB
 
 void process_file__RGB
 (png_structp png_ptr_A, png_structp png_ptr_B,
-        int **rgb, ProcMode process_mode)
-//        int *rgb[3], ProcMode process_mode)
+        int **rgb_vals, ProcMode process_mode)
+//        int *rgb_vals[3], ProcMode process_mode)
 {
     int width = png_ptr_A->width;
     int height = png_ptr_A->height;
@@ -2126,8 +2126,15 @@ void process_file__RGB
     int x, y;
     
     //log
-    printf("[%s : %d] rgb[0] => %d\n", base_name(__FILE__), __LINE__, (int) rgb[0]);
-//    printf("[%s : %d] (*rgb[0]) => %d\n", base_name(__FILE__), __LINE__, (*rgb[0]));
+    printf("[%s : %d] process_mode => %d\n", 
+            base_name(__FILE__), __LINE__, process_mode);
+    printf("[%s : %d] rgb => %d\n", 
+            base_name(__FILE__), __LINE__, rgb);
+
+    
+    //log
+    printf("[%s : %d] rgb_vals[0] => %d\n", base_name(__FILE__), __LINE__, (int) rgb_vals[0]);
+//    printf("[%s : %d] (*rgb_vals[0]) => %d\n", base_name(__FILE__), __LINE__, (*rgb_vals[0]));
 
     
     for(y = 0; y < height; y++) {
@@ -2142,17 +2149,49 @@ void process_file__RGB
             png_byte *ptr_B = &(row_B[x * 3]);
 //            png_byte *ptr_B = &(row_B[x * 3]);
             
-            int r = (int) rgb[0];
-            int g = (int) rgb[1];
-            int b = (int) rgb[2];
+            if (process_mode == rgb) {
+
+                int r = (int) rgb_vals[0];
+                int g = (int) rgb_vals[1];
+                int b = (int) rgb_vals[2];
+
+                ptr_B[0] = ptr_A[0] * r / 100;
+                ptr_B[1] = ptr_A[1] * g / 100;
+                ptr_B[2] = ptr_A[2] * b / 100;
             
-            ptr_B[0] = ptr_A[0] * r / 100;
-            ptr_B[1] = ptr_A[1] * g / 100;
-            ptr_B[2] = ptr_A[2] * b / 100;
-//            ptr_B[0] = ptr_A[0] * (*rgb[0]) / 100;
-//            ptr_B[1] = ptr_A[1] * (*rgb[1]) / 100;
-//            ptr_B[2] = ptr_A[2] * (*rgb[2]) / 100;
-//            ptr_B[2] = ptr_A[2] * rgb[2] / 100;
+            } else {
+                
+                int i;
+                
+                int max_bright = 100;
+                int minimum_bright = 50;
+                
+                
+                
+                for (i = 0; i < 3; i++) {
+
+                    if (ptr_A[i] > max_bright) {
+
+                        ptr_B[i] = 255;
+//                        ptr_B[i] = max_bright;
+
+                    } else if (ptr_A[i] < minimum_bright) {
+
+                        ptr_B[i] = 0;
+
+                    } else {
+                        
+                        ptr_B[i] = ptr_A[i];
+                        
+                    }
+                    
+                }
+
+            }
+//            ptr_B[0] = ptr_A[0] * (*rgb_vals[0]) / 100;
+//            ptr_B[1] = ptr_A[1] * (*rgb_vals[1]) / 100;
+//            ptr_B[2] = ptr_A[2] * (*rgb_vals[2]) / 100;
+//            ptr_B[2] = ptr_A[2] * rgb_vals[2] / 100;
 //            ptr_B[1] = ptr_A[1];
 //            ptr_B[2] = ptr_A[2];
             

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/lib.o \
 	${OBJECTDIR}/merge_png.o \
+	${OBJECTDIR}/methods.o \
 	${OBJECTDIR}/pnglib.o \
 	${OBJECTDIR}/utils/img_lib.o \
 	${OBJECTDIR}/utils/pgmlib.o \
@@ -76,6 +77,11 @@ ${OBJECTDIR}/merge_png.o: merge_png.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/merge_png.o merge_png.c
+
+${OBJECTDIR}/methods.o: methods.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/methods.o methods.c
 
 ${OBJECTDIR}/pnglib.o: pnglib.c 
 	${MKDIR} -p ${OBJECTDIR}

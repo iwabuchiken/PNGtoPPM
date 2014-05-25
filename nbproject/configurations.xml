@@ -10,6 +10,7 @@
         <itemPath>include/ppmlib.h</itemPath>
       </logicalFolder>
       <itemPath>include/lib.h</itemPath>
+      <itemPath>include/methods.h</itemPath>
       <itemPath>include/pnginfo.h</itemPath>
       <itemPath>include/pnglib.h</itemPath>
       <itemPath>include/pngstruct.h</itemPath>
@@ -29,6 +30,7 @@
       </logicalFolder>
       <itemPath>lib.c</itemPath>
       <itemPath>merge_png.c</itemPath>
+      <itemPath>methods.c</itemPath>
       <itemPath>pnglib.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -64,6 +66,8 @@
       </item>
       <item path="include/lib.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/methods.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/pgmlib.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/pnginfo.h" ex="false" tool="3" flavor2="0">
@@ -79,6 +83,8 @@
       <item path="lib.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="merge_png.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="methods.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pnglib.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -113,6 +119,8 @@
       </item>
       <item path="include/lib.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/methods.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/pgmlib.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/pnginfo.h" ex="false" tool="3" flavor2="0">
@@ -128,6 +136,8 @@
       <item path="lib.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="merge_png.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="methods.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pnglib.c" ex="false" tool="0" flavor2="0">
       </item>

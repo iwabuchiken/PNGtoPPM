@@ -14,6 +14,11 @@ pushd C:\WORKS\WS\WS_Android_20130929_122122\IP
 pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM
 ./dist/Debug/GNU-Linux-x86/pngtoppm
 
+#REF https://help.ubuntu.com/community/CommandlineHowto#Multiple_Commands
+pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM && gitk &
+pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM
+gitk &
+
 pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/images
 pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/
 
@@ -34,6 +39,12 @@ pushd /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/dist/Debug/GNU-Linux-x86/
 ------------------------
 ^(CVS|SCCS|vssver.?\.scc|#.*#|%.*%|_svn)$|~$|^\.(?!htaccess$).*$
 
+
+------------------------
+
+	Log
+------------------------
+gedit /home/buchi/WORKS/WS/NetBeans/PNGtoPPM/log/exec_log.txt &
 
 ------------------------
 

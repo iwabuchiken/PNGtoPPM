@@ -18,6 +18,10 @@
 #include "include/pnginfo.h"
 #endif
 
+#ifndef METHODS_H
+#include "include/methods.h"
+#endif
+
 /**************************
  * Global vars
  **************************/
@@ -50,6 +54,8 @@ char *file_dst;
 
 int RGB[3];
 
+const char *LOG_FILE_PATH = "./log/exec_log.txt";
+
 //#ifndef LIB_H
 
 /*
@@ -78,11 +84,17 @@ void set_Options_BgColor(char **);
 void set_Options_MergeDirec(char **);
 
 int _Is_ProcessMode(int, char **);
-void process_Mode(int, char **);
+void Mode_Process(int, char **);
 void set_Options_Process(char **);
 int set_Options_Process_RGB(char **);
 char * _setup_FileName_Src__Process(int, char **);
 char * _setup_FileName_Dst__Process(int, char **);
+
+void log_Command_Input(int, char **);
+int _Dispath_ModeOptions(int, char **);
+
+// Mode_Histo
+void Mode_Histo(int, char **);
 
 /*************************************
  
@@ -122,79 +134,94 @@ int main(int argc, char** argv) {
     /**************************
      * Log: command line input
      **************************/
-    char *time_label = get_TimeLabel_Now(STANDARD);
+    log_Command_Input(argc, argv);
     
-    //log
-    printf("[%s : %d] time_label => %s\n", 
-            base_name(__FILE__), __LINE__, time_label);
-
-    
-    //log
-    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
-
-    char joint = ' ';
-    
-    char *argv_str = join(joint, argv, argc);
-//    char *argv_str = join(" ", argv, argc);
-    
-    //log
-    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
-
-    char *log_file_path = "./log/exec_log.txt";
-    
-    FILE *fp;
-    
-    if((fp = fopen(log_file_path, "a")) == NULL) {
-        
-        //log
-        printf("[%s : %d] Can't open the log file: %s\n", 
-                base_name(__FILE__), __LINE__, log_file_path);
-        
-        exit(-1);
-
-    }
-    
-    fprintf(fp, "[%s]\n", time_label);
-//    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
-    
-    fprintf(fp, "%s\n", "<argv>");
-    
-    fprintf(fp, "%s\n", argv_str);
-    
-//    char *CR = "\n";
+//    char *time_label = get_TimeLabel_Now(STANDARD);
 //    
-//    fwrite(CR, 1, sizeof(CR), fp);
-//    fwrite('\n', 1, sizeof(char), fp);
-    
-    fputc('\n', fp);
-    
-    fclose(fp);
-    
-    //log
-    printf("[%s : %d] file => closed\n", base_name(__FILE__), __LINE__);
-
-    
 //    //log
-//    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);
+//    printf("[%s : %d] time_label => %s\n", 
+//            base_name(__FILE__), __LINE__, time_label);
 //
 //    
-//    get_TimeLabel_Now(SEC);
+//    //log
+//    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
+//
+//    char joint = ' ';
 //    
+//    char *argv_str = join(joint, argv, argc);
+////    char *argv_str = join(" ", argv, argc);
 //    
-    exit(-1);
+//    //log
+//    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
+//
+//    char *log_file_path = "./log/exec_log.txt";
+//    
+//    FILE *fp;
+//    
+//    if((fp = fopen(log_file_path, "a")) == NULL) {
+//        
+//        //log
+//        printf("[%s : %d] Can't open the log file: %s\n", 
+//                base_name(__FILE__), __LINE__, log_file_path);
+//        
+//        exit(-1);
+//
+//    }
+//    
+//    //REF fprintf http://www.tutorialspoint.com/c_standard_library/c_function_fprintf.htm
+//    fprintf(fp, "[%s]\n", time_label);
+////    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
+//    
+//    fprintf(fp, "%s\n", "<argv>");
+//    
+//    fprintf(fp, "%s\n", argv_str);
+//    
+////    char *CR = "\n";
+////    
+////    fwrite(CR, 1, sizeof(CR), fp);
+////    fwrite('\n', 1, sizeof(char), fp);
+//    
+//    //REF fputc http://www.cplusplus.com/reference/cstdio/fputc/
+//    fputc('\n', fp);
+//    
+//    fclose(fp);
+//    
+//    //log
+//    printf("[%s : %d] file => closed\n", base_name(__FILE__), __LINE__);
+//
+//    
+////    //log
+////    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);
+////
+////    
+////    get_TimeLabel_Now(SEC);
+////    
+////    
+//    exit(-1);
     
     /**************************
-     * Processing mode?
+     * Dispatch
      **************************/
-    int res_i = _Is_ProcessMode(argc, argv);
+    int res_i = _Dispath_ModeOptions(argc, argv);
     
-    if(res_i == true) {
-        
-        process_Mode(argc, argv);
-        
+    if (res_i == 0) {
+
         return 0;
-        
+
     }
+    
+//    /**************************
+//     * Processing mode?
+//     **************************/
+//    int res_i = _Is_ProcessMode(argc, argv);
+//    
+//    if(res_i == true) {
+//        
+//        Mode_Process(argc, argv);
+//        
+//        return 0;
+//        
+//    }
     
     /*************************************
  
@@ -987,28 +1014,36 @@ char * _setup_FileName_Dst__Process(int argc, char **argv)
     
 }
 
-void show_help(void)
-{
-    char *msg = "<Usage>\n"
-    "\tpngtoppm src1 src2 dst\n"
-    "\n"
-    "<Options>\n"
-    "\t-bg\t background color\n"
-    "\t\tred, green, blue, purple, white, black"
-    "\t-direc\n"
-    "\t\tverti, hori\n"
-    
-    ;
-
-
-    consolColor_Change(LIGHT_BLUE);
-    
-    //log
-    printf("[%s : %d]\n%s\n", base_name(__FILE__), __LINE__, msg);
-
-    consolColor_Reset();
-    
-}
+//void show_help(void)
+//{
+//    char *msg = "<Usage>\n"
+//    "\tpngtoppm src1 src2 dst\n"
+//    "\n"
+//    "<Options>\n"
+//    "\t-bg\t background color\n"
+//    "\t\tred, green, blue, purple, white, black"
+//    "\t-direc\n"
+//    "\t\tverti, hori\n"
+//    
+//    "\t-proc\n"
+//    "\t\tProcess png pixels\n"
+//    
+//    "\t-rgb\n"
+//    "\t\tRGB values for \"-proc\" mode\n"
+//    "\t\te.g. 100,20,50 (R,G,B)\n"
+//    "\t\te.g. ./dist/Debug/GNU-Linux-x86/pngtoppm\n"
+//    "\t\t\t-src images/XXX -dst images/YYY -proc -rgb 100,20,20\n"
+//    ;
+//
+//
+//    consolColor_Change(LIGHT_BLUE);
+//    
+//    //log
+//    printf("[%s : %d]\n%s\n", base_name(__FILE__), __LINE__, msg);
+//
+//    consolColor_Reset();
+//    
+//}
 
 void set_Options(char **argv)
 {
@@ -1170,7 +1205,33 @@ int _Is_ProcessMode(int argc, char **argv)
 
 }//int _Is_ProcessMode(int argc, char **argv)
 
-void process_Mode(int argc, char **argv)
+/**************************
+ * _Is_HistoMode(int argc, char **argv)
+ * 
+ * @return true => option "-histo" present
+ *         false => not
+ **************************/
+int _Is_HistoMode(int argc, char **argv)
+{
+    int i;
+    
+//    argv ++;
+    
+    for (i = 0; i < argc; i++) {
+
+        if(!strcmp(*(argv + i), "-histo")) {
+            
+            return true;
+            
+        };
+
+    }
+    
+    return false;
+
+}//int _Is_ProcessMode(int argc, char **argv)
+
+void Mode_Process(int argc, char **argv)
 {
 
     /*************************************
@@ -1429,8 +1490,8 @@ void process_Mode(int argc, char **argv)
  
      **************************************/
     //log
-    ProcMode process_mode = threshold;
-//    ProcMode process_mode = rgb;
+//    ProcMode process_mode = threshold;
+    ProcMode process_mode = rgb;
     
     process_file__RGB(png_ptr_A, png_ptr_B, RGB, process_mode);
 //     process_file(width, height);
@@ -1530,7 +1591,7 @@ void process_Mode(int argc, char **argv)
 
     
 //    return (EXIT_SUCCESS);    
-}//void process_Mode(int argc, char **argv)
+}//void Mode_Process(int argc, char **argv)
 
 void set_Options_Process(char **argv)
 {
@@ -1662,3 +1723,133 @@ int set_Options_Process_RGB(char **argv)
 //    return false;
     
 }//void set_Options_Process_RGB(char **argv)
+
+void log_Command_Input(int argc, char **argv)
+{
+
+    char *time_label = get_TimeLabel_Now(STANDARD);
+    
+    //log
+    printf("[%s : %d] time_label => %s\n", 
+            base_name(__FILE__), __LINE__, time_label);
+
+    
+    //log
+    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
+
+    char joint = ' ';
+    
+    char *argv_str = join(joint, argv, argc);
+//    char *argv_str = join(" ", argv, argc);
+    
+    //log
+    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
+
+//    char *log_file_path = "./log/exec_log.txt";
+    
+    FILE *fp;
+    
+    if((fp = fopen(LOG_FILE_PATH, "a")) == NULL) {
+        
+        //log
+        printf("[%s : %d] Can't open the log file: %s\n", 
+                base_name(__FILE__), __LINE__, LOG_FILE_PATH);
+        
+        exit(-1);
+
+    }
+    
+    //REF fprintf http://www.tutorialspoint.com/c_standard_library/c_function_fprintf.htm
+    fprintf(fp, "[%s]\n", time_label);
+//    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
+    
+    fprintf(fp, "%s\n", "<argv>");
+    
+    fprintf(fp, "%s\n", argv_str);
+    
+//    char *CR = "\n";
+//    
+//    fwrite(CR, 1, sizeof(CR), fp);
+//    fwrite('\n', 1, sizeof(char), fp);
+    
+    //REF fputc http://www.cplusplus.com/reference/cstdio/fputc/
+    fputc('\n', fp);
+    
+    fclose(fp);
+    
+    //log
+    printf("[%s : %d] file => closed\n", base_name(__FILE__), __LINE__);
+
+    
+//    //log
+//    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);
+//
+//    
+//    get_TimeLabel_Now(SEC);
+//    
+//    
+//    exit(-1);
+    
+}
+
+/**************************
+ * _Dispath_ModeOptions(int argc, char **argv)
+ * 
+ * @return
+ *      0 => Dispathing done. No further processing in main()
+ *      1 => Dispathing not done. Further processing in main()
+ * 
+ **************************/
+int _Dispath_ModeOptions(int argc, char **argv)
+{
+
+    /**************************
+     * Processing mode?
+     **************************/
+    int res_i = _Is_ProcessMode(argc, argv);
+    
+    if(res_i == true) {
+        
+        Mode_Process(argc, argv);
+        
+        return 0;
+        
+    }//if(res_i == true)
+    
+    /**************************
+     * Histogram?
+     **************************/
+    res_i = _Is_HistoMode(argc, argv);
+    
+    if (res_i == true) {
+
+        //log
+        printf("[%s : %d] histo option => given\n", base_name(__FILE__), __LINE__);
+        
+        Mode_Histo(argc, argv);
+
+        return 0;
+
+    }
+
+    
+    return 1;
+    
+}//int _Dispath_ModeOptions(int argc, char **argv)
+
+void Mode_Histo(int argc, char **argv)
+{
+    /**************************
+     * Get: Source PNG file
+     **************************/
+    char *file_src = _setup_FileName_Src__Process(argc, argv);
+    
+    consolColor_Change(GREEN);
+
+    //log
+    printf("[%s : %d] file_src => %s\n", base_name(__FILE__), __LINE__, file_src);
+
+    consolColor_Reset();
+
+        
+}

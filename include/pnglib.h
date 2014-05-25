@@ -60,11 +60,38 @@ typedef enum {
     
 } ProcMode;
 
+/////////////////////////////////////////
+
+// Vars
+
+/////////////////////////////////////////
+//char *bg_colors_2[] = {
+//    
+//    "red", "blue", "green", "purple",
+//    "white", "black"
+//    
+//};
+
+//int pnglib;
+//char *bg_colors_2;
+//char *bg_colors_3 = "abcdef";
 
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
+
+    char *bg_colors_2[];
+    
+    int histo_png_size[2];
+    
+//    char *bg_colors_2[6];
+//    char *bg_colors_2[6] = {
+//    
+//        "red",  "blue", "green",        "purple",
+//        "white",        "black"
+//
+//    };
 
     png_bytep * row_pointers;
     png_bytep * row_pointers_RGBA;
@@ -101,7 +128,7 @@ extern "C" {
         png_infop, png_bytep *,
         int *, int *,
         png_byte *, png_byte *);
-
+    
     void get_PngInfo
     (char*, png_structp, png_infop,
         int *, int *, int *,
@@ -203,6 +230,9 @@ extern "C" {
     void process_file__RGB
 //    (png_structp, png_structp, int *[3], ProcMode);
     (png_structp, png_structp, int **, ProcMode);
+    
+    void init_Row_Pointers_B__Histo(png_structp, png_infop, char *);
+    
     
 #ifdef	__cplusplus
 }

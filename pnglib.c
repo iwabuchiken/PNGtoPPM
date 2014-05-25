@@ -1,7 +1,18 @@
 #ifndef PNGLIB_H
+//#define	PNGLIB_H
 #include "include/pnglib.h"
 #include "include/pnginfo.h"
 #endif
+
+//char *bg_colors_2[6] = {
+char *bg_colors_2[] = {
+    
+    "red", "blue", "green", "purple",
+    "white", "black"
+
+};
+
+int histo_png_size[2] = {255, 255};
 
 void show_message_png()
 {
@@ -1734,6 +1745,98 @@ void init_Row_Pointers_B
 //    printf("[%s : %d] init_Row_Pointers_B() => done\n", base_name(__FILE__), __LINE__);
     
 }//init_Row_Pointers_B
+
+void init_Row_Pointers_B__Histo
+(png_structp png_ptr, png_infop info_ptr, char *bg_color_name)
+{
+    
+    int x, y;   // iterator
+    
+    int width = png_ptr->width;
+    int height = png_ptr->height;
+    
+    //log
+    printf("[%s : %d] width, height => %d, %d\n", 
+            base_name(__FILE__), __LINE__, width, height);
+
+    //log
+    printf("[%s : %d] png_get_rowbytes(png_ptr,info_ptr) => %d\n", 
+            base_name(__FILE__), __LINE__, png_get_rowbytes(png_ptr,info_ptr));
+
+    
+    /**************************
+     * Malloc
+     **************************/
+    row_pointers_B = (png_bytep*) malloc(sizeof(png_bytep) * (height));
+
+    for (y=0; y < height; y++)
+            row_pointers_B[y] = 
+                    (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+
+    /**************************
+     * Bg color
+     **************************/
+    for (y = 0; y < height; y++) {
+
+        png_byte* row = row_pointers_B[y];
+//
+        for (x=0; x<width; x++) {
+
+            png_byte* ptr = &(row[x*3]);
+            
+            if (!strcmp(bg_color_name, "green")) {
+                
+                set_PixelVals(ptr, PIXEL_GREEN);
+
+            } else if (!strcmp(bg_color_name, "red")) {
+                
+                set_PixelVals(ptr, PIXEL_RED);
+                
+            } else if (!strcmp(bg_color_name, "blue")) {
+                
+                set_PixelVals(ptr, PIXEL_BLUE);
+                
+            } else if (!strcmp(bg_color_name, "purple")) {
+                
+                set_PixelVals(ptr, PIXEL_PURPLE);
+                
+            } else if (!strcmp(bg_color_name, "white")) {
+                
+                set_PixelVals(ptr, PIXEL_WHITE);
+                
+            } else if (!strcmp(bg_color_name, "black")) {
+                
+                set_PixelVals(ptr, PIXEL_BLACK);
+                
+            } else {
+                
+                consolColor_Change(RED);
+
+                //log
+                printf("[%s : %d] Unknown color name => %s\n",
+                        base_name(__FILE__), __LINE__, bg_color_name);
+
+                consolColor_Reset();
+                
+                exit(-1);
+                
+            }
+
+        }
+        
+    }//for (y=0; y<height; y++)    
+    
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] init_Row_Pointers_B_Histo() => done\n",
+            base_name(__FILE__), __LINE__);
+
+    consolColor_Reset();
+//    //log
+//    printf("[%s : %d] init_Row_Pointers_B() => done\n", base_name(__FILE__), __LINE__);
+    
+}//void init_Row_Pointers_B__Histo
 
 void set_PixelVals(png_byte* ptr, int r, int g, int b)
 {

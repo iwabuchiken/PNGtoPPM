@@ -12,10 +12,18 @@
 #include <unistd.h>
 
 #ifndef PNGLIB_H
+//#define	PNGLIB_H
 //#include "include/pnglib.h"
 #include "include/pnglib.h"
+#endif
+
+#ifndef PNGINFO_H
+
 //#include "include/pnglib.h"
+//#include "include/pnginfo.h"
+
 #include "include/pnginfo.h"
+
 #endif
 
 #ifndef METHODS_H
@@ -31,6 +39,12 @@ char *opt_bg_color; // background color
 char *opt_bg_color_Default = "blue"; // background color
 
 //const char *bg_colors = {
+
+//extern char *bg_colors[];
+//extern char *bg_colors[];
+
+extern char *bg_colors_2[];
+
 char *bg_colors[] = {
     
     "red", "blue", "green", "purple",
@@ -54,6 +68,10 @@ int opt_merge_direc = 0;        // option: merge direction
 char *file_dst;
 
 int RGB[3];
+
+// Histogram
+extern int histo_png_size[2];
+//int histo_png_size[2] = {200, 200};
 
 //const char *LOG_FILE_PATH = "./log/exec_log.txt";
 
@@ -132,6 +150,14 @@ int main(int argc, char** argv) {
         
         return 0;
     }
+    
+//    //test
+//    //log
+//    printf("[%s : %d] bg_colors_2[0] => %s\n", 
+//            base_name(__FILE__), __LINE__, bg_colors_2[0]);
+//    printf("[%s : %d] bg_colors_2[1] => %s\n", 
+//            base_name(__FILE__), __LINE__, bg_colors_2[1]);
+
     
     /**************************
      * Log: command line input
@@ -2008,8 +2034,10 @@ void Mode_Histo(int argc, char **argv)
 //    if(opt_merge_direc == 1) {          // 1: horizontal
         
     // png_ptr_B
-    width_B = width_A;
-    height_B = height_A;
+    width_B = histo_png_size[0];
+    height_B = histo_png_size[1];
+//    width_B = width_A;
+//    height_B = height_A;
 //    height_C = height_A + height_B;
 
     color_type_B = color_type_A;
@@ -2019,7 +2047,14 @@ void Mode_Histo(int argc, char **argv)
     png_ptr_B->height = height_B;
     png_ptr_B->color_type = color_type_B;
     
-    info_ptr_B->rowbytes = info_ptr_A->rowbytes;
+//    info_ptr_B->rowbytes = info_ptr_A->rowbytes;
+    info_ptr_B->rowbytes = width_B * 3;
+    png_ptr_B->rowbytes = info_ptr_B->rowbytes;
+    
+    //log
+    printf("[%s : %d] info_ptr_B->rowbytes => %d\n", 
+            base_name(__FILE__), __LINE__, info_ptr_B->rowbytes);
+
 
     // png_ptr_A
     png_ptr_A->width = width_A;
@@ -2027,17 +2062,48 @@ void Mode_Histo(int argc, char **argv)
     png_ptr_A->color_type = color_type_A;
     
     //log
-    printf("[%s : %d] png_ptr_A->width => %d\n", 
-            base_name(__FILE__), __LINE__, png_ptr_A->width);
+    printf("[%s : %d] png_ptr_A: width, height => %d, %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
     printf("[%s : %d] width_A => %d\n", 
             base_name(__FILE__), __LINE__, width_A);
+    
+    printf("[%s : %d] png_ptr_B: width, height => %d, %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_B->width, png_ptr_B->height);
+    printf("[%s : %d] width_B => %d\n", 
+            base_name(__FILE__), __LINE__, width_B);
     
     /**************************
      * Build: dst png: info
      * 
      * 
      **************************/
-//    init_Row_Pointers_B(png_ptr_B, info_ptr_B);
+    char *bg_color_name = "white";
+    
+    init_Row_Pointers_B__Histo(png_ptr_B, info_ptr_B, bg_color_name);
 
+    //log
+    printf("[%s : %d] png_ptr_B->rowbytes => %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_B->rowbytes);
+    printf("[%s : %d] info_ptr_B->rowbytes => %d\n", 
+            base_name(__FILE__), __LINE__, info_ptr_B->rowbytes);
+
+    
+    /*************************************
+ 
+     * write png
+ 
+     **************************************/
+    _test_WritePng__Process
+    (file_dst, png_ptr_B, info_ptr_B,
+        &width_B, &height_B,
+        &color_type_B, &bit_depth_B);
+    
+//    _test_WritePng_Rgba
+//    (file_path_dst, png_ptr_Dst, info_ptr_Dst,
+//        &width_Dst, &height_Dst,
+//        &color_type_Dst, &bit_depth_Dst);
+    
+    //log
+    printf("[%s : %d] _test_WritePng() => done\n", base_name(__FILE__), __LINE__);
     
 }//void Mode_Histo(int argc, char **argv)

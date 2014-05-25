@@ -60,23 +60,3 @@ argc=11: ./dist/Debug/GNU-Linux-x86/pngtoppm images/download-jpg.copy.png images
 <argv>
 argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/download-jpg.copy.png -dst images/histo-1.png
 
-[2014:05:25 17:12:04]
-<argv>
-argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/download-jpg.copy.png -dst images/histo-1.png
-
-[2014:05:25 17:15:42]
-<argv>
-argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/download-jpg.copy.png -dst images/histo-1.png
-
-[2014:05:25 17:16:40]
-<argv>
-argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/download-jpg.copy.png -dst images/histo-1.png
-
-[2014:05:25 17:18:58]
-<argv>
-argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/download-jpg.copy.png -dst images/histo-1.png
-
-[2014:05:25 17:21:10]
-<argv>
-argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/download-jpg.copy.png -dst images/histo-1.png
-

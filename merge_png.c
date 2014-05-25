@@ -19,6 +19,7 @@
 #endif
 
 #ifndef METHODS_H
+#define	METHODS_H
 #include "include/methods.h"
 #endif
 
@@ -54,7 +55,7 @@ char *file_dst;
 
 int RGB[3];
 
-const char *LOG_FILE_PATH = "./log/exec_log.txt";
+//const char *LOG_FILE_PATH = "./log/exec_log.txt";
 
 //#ifndef LIB_H
 
@@ -91,10 +92,11 @@ char * _setup_FileName_Src__Process(int, char **);
 char * _setup_FileName_Dst__Process(int, char **);
 
 void log_Command_Input(int, char **);
-int _Dispath_ModeOptions(int, char **);
+int _Dispatch_ModeOptions(int, char **);
 
 // Mode_Histo
 void Mode_Histo(int, char **);
+char * _setup_FileName_Dst__Process(int, char **);
 
 /*************************************
  
@@ -136,73 +138,10 @@ int main(int argc, char** argv) {
      **************************/
     log_Command_Input(argc, argv);
     
-//    char *time_label = get_TimeLabel_Now(STANDARD);
-//    
-//    //log
-//    printf("[%s : %d] time_label => %s\n", 
-//            base_name(__FILE__), __LINE__, time_label);
-//
-//    
-//    //log
-//    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
-//
-//    char joint = ' ';
-//    
-//    char *argv_str = join(joint, argv, argc);
-////    char *argv_str = join(" ", argv, argc);
-//    
-//    //log
-//    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
-//
-//    char *log_file_path = "./log/exec_log.txt";
-//    
-//    FILE *fp;
-//    
-//    if((fp = fopen(log_file_path, "a")) == NULL) {
-//        
-//        //log
-//        printf("[%s : %d] Can't open the log file: %s\n", 
-//                base_name(__FILE__), __LINE__, log_file_path);
-//        
-//        exit(-1);
-//
-//    }
-//    
-//    //REF fprintf http://www.tutorialspoint.com/c_standard_library/c_function_fprintf.htm
-//    fprintf(fp, "[%s]\n", time_label);
-////    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
-//    
-//    fprintf(fp, "%s\n", "<argv>");
-//    
-//    fprintf(fp, "%s\n", argv_str);
-//    
-////    char *CR = "\n";
-////    
-////    fwrite(CR, 1, sizeof(CR), fp);
-////    fwrite('\n', 1, sizeof(char), fp);
-//    
-//    //REF fputc http://www.cplusplus.com/reference/cstdio/fputc/
-//    fputc('\n', fp);
-//    
-//    fclose(fp);
-//    
-//    //log
-//    printf("[%s : %d] file => closed\n", base_name(__FILE__), __LINE__);
-//
-//    
-////    //log
-////    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);
-////
-////    
-////    get_TimeLabel_Now(SEC);
-////    
-////    
-//    exit(-1);
-    
     /**************************
      * Dispatch
      **************************/
-    int res_i = _Dispath_ModeOptions(argc, argv);
+    int res_i = _Dispatch_ModeOptions(argc, argv);
     
     if (res_i == 0) {
 
@@ -1012,38 +951,145 @@ char * _setup_FileName_Dst__Process(int argc, char **argv)
     // return
     return file_dst;
     
-}
+}//char * _setup_FileName_Dst__Process(int argc, char **argv)
 
-//void show_help(void)
-//{
-//    char *msg = "<Usage>\n"
-//    "\tpngtoppm src1 src2 dst\n"
-//    "\n"
-//    "<Options>\n"
-//    "\t-bg\t background color\n"
-//    "\t\tred, green, blue, purple, white, black"
-//    "\t-direc\n"
-//    "\t\tverti, hori\n"
+/**************************
+ * _setup_FileName_Dst__Process(int argc, char **argv)
+ * 
+ * 
+ **************************/
+char * _setup_FileName_Dst__Histo(int argc, char **argv)
+{
+    char *file_dst;
+    
+    int i = 0;
+    int flag = false;   // true if "-rgb" values given
+    
+    while(*(argv + i) != NULL) {
+        
+        if(!strcmp(*(argv + i), "-dst")) {
+            
+            i ++;
+            
+            if(*(argv + i) != NULL) {
+                
+                int len = strlen(*(argv + i));
+                
+                file_dst = (char *) malloc(sizeof(char) * (len + 1));
+                
+                strcpy(file_dst, *(argv + i));
+                
+                file_dst[len] = '\0';
+                
+                flag = true;
+                
+                break;
+                
+            } else {
+                
+                //log
+                printf("[%s : %d] value not given for \"-src\"\n", 
+                        base_name(__FILE__), __LINE__);
+
+                exit(-1);
+                
+            }
+            
+        }
+        
+        i ++;
+        
+    }//while(*(argv + i) != NULL)
+
+    if(flag == false) {
+        
+        //log
+        printf("[%s : %d] \"-dst\" option not given\n", base_name(__FILE__), __LINE__);
+        
+        exit(-1);
+
+    }
 //    
-//    "\t-proc\n"
-//    "\t\tProcess png pixels\n"
+//    /**************************
+//     * Add info: RGB
+//     **************************/
+//    char delim = '.';
+//    int *num_of_tokens;
+//    int position = 1;
 //    
-//    "\t-rgb\n"
-//    "\t\tRGB values for \"-proc\" mode\n"
-//    "\t\te.g. 100,20,50 (R,G,B)\n"
-//    "\t\te.g. ./dist/Debug/GNU-Linux-x86/pngtoppm\n"
-//    "\t\t\t-src images/XXX -dst images/YYY -proc -rgb 100,20,20\n"
-//    ;
+//    char **tokens = str_split_r_2
+//                (file_dst, delim, position, num_of_tokens);
+//    
+//    if (tokens != NULL) {
 //
+//        //log
+//        printf("[%s : %d] tokens[0] = %s / tokens[1] = %s\n", 
+//                base_name(__FILE__), __LINE__, tokens[0], tokens[1]);
+//        
+//        free(file_dst);
+//        
+//        char *label = "_rgb=";
+//        
+//        char *rgb_info = (char *) malloc(sizeof(char) * (11 + 1));
+//        
+//        sprintf(rgb_info, "%d,%d,%d", RGB[0], RGB[1], RGB[2]);
+//        
+//        rgb_info = concat(label, rgb_info);
+////        char *bg_info = concat(label, opt_bg_color);
+//        
+////        // direction
+////        label = "_direc=";
+////        char *direc_info = concat(label, direc[opt_merge_direc]);
+////        
+////        //log
+////        printf("[%s : %d] bg_info => %s\n", base_name(__FILE__), __LINE__, bg_info);
 //
-//    consolColor_Change(LIGHT_BLUE);
-//    
-//    //log
-//    printf("[%s : %d]\n%s\n", base_name(__FILE__), __LINE__, msg);
+//        int size = 4;
+//        
+//        char **tmp = (char **) malloc(sizeof(char *) * size);
+////        char **tmp = (char **) malloc(sizeof(char *) * 4);
+//        
+//        char *joint_str = ".";
+//        
+//        tmp[0] = tokens[0];
+//        tmp[1] = rgb_info;
+//        tmp[2] = joint_str;
+//        tmp[3] = tokens[1];
+//        
+//        char *tmp_str = join_simple(tmp, size);
+////        char *tmp_str = join_simple(tmp, 4);
+////        char *tmp_str = join_simple(tmp, (sizeof(tmp) / sizeof(char *)));
+//        
+//        //log
+//        printf("[%s : %d] tmp_str => %s\n", base_name(__FILE__), __LINE__, tmp_str);
+//        
+//        file_dst = tmp_str;
+//        
+////        return dst;
+////        return tmp_str;
 //
-//    consolColor_Reset();
-//    
-//}
+//        
+//    } else {
+//        
+//        consolColor_Change(RED);
+//
+//        //log
+//        printf("[%s : %d] tokens => NULL\n",
+//                base_name(__FILE__), __LINE__);
+//
+//        consolColor_Reset();
+//        
+//        exit(-1);
+//        
+////        return dst;
+////        return argv[3];
+//
+//    }
+    
+    // return
+    return file_dst;
+    
+}//_setup_FileName_Dst__Histo(int argc, char **argv)
 
 void set_Options(char **argv)
 {
@@ -1387,6 +1433,7 @@ void Mode_Process(int argc, char **argv)
             base_name(__FILE__), __LINE__, info_ptr_A->width);
 
     
+    
     /*************************************
  
      * read png
@@ -1724,83 +1771,77 @@ int set_Options_Process_RGB(char **argv)
     
 }//void set_Options_Process_RGB(char **argv)
 
-void log_Command_Input(int argc, char **argv)
-{
-
-    char *time_label = get_TimeLabel_Now(STANDARD);
-    
-    //log
-    printf("[%s : %d] time_label => %s\n", 
-            base_name(__FILE__), __LINE__, time_label);
-
-    
-    //log
-    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
-
-    char joint = ' ';
-    
-    char *argv_str = join(joint, argv, argc);
-//    char *argv_str = join(" ", argv, argc);
-    
-    //log
-    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
-
-//    char *log_file_path = "./log/exec_log.txt";
-    
-    FILE *fp;
-    
-    if((fp = fopen(LOG_FILE_PATH, "a")) == NULL) {
-        
-        //log
-        printf("[%s : %d] Can't open the log file: %s\n", 
-                base_name(__FILE__), __LINE__, LOG_FILE_PATH);
-        
-        exit(-1);
-
-    }
-    
-    //REF fprintf http://www.tutorialspoint.com/c_standard_library/c_function_fprintf.htm
-    fprintf(fp, "[%s]\n", time_label);
-//    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
-    
-    fprintf(fp, "%s\n", "<argv>");
-    
-    fprintf(fp, "%s\n", argv_str);
-    
-//    char *CR = "\n";
-//    
-//    fwrite(CR, 1, sizeof(CR), fp);
-//    fwrite('\n', 1, sizeof(char), fp);
-    
-    //REF fputc http://www.cplusplus.com/reference/cstdio/fputc/
-    fputc('\n', fp);
-    
-    fclose(fp);
-    
-    //log
-    printf("[%s : %d] file => closed\n", base_name(__FILE__), __LINE__);
-
-    
-//    //log
-//    printf("[%s : %d] time_label => %s\n", base_name(__FILE__), __LINE__, time_label);
+//void log_Command_Input(int argc, char **argv)
+//{
 //
+//    char *time_label = get_TimeLabel_Now(STANDARD);
 //    
-//    get_TimeLabel_Now(SEC);
+////    //log
+////    printf("[%s : %d] time_label => %s\n", 
+////            base_name(__FILE__), __LINE__, time_label);
+////
+////    
+////    //log
+////    printf("[%s : %d] argc => %d\n", base_name(__FILE__), __LINE__, argc);
+//
+//    char joint = ' ';
 //    
+//    char *argv_str = join(joint, argv, argc);
+////    char *argv_str = join(" ", argv, argc);
 //    
-//    exit(-1);
-    
-}
+////    //log
+////    printf("[%s : %d] argv_str => %s\n", base_name(__FILE__), __LINE__, argv_str);
+//
+////    char *log_file_path = "./log/exec_log.txt";
+//    
+//    FILE *fp;
+//    
+//    if((fp = fopen(LOG_FILE_PATH, "a")) == NULL) {
+//        
+//        //log
+//        printf("[%s : %d] Can't open the log file: %s\n", 
+//                base_name(__FILE__), __LINE__, LOG_FILE_PATH);
+//        
+//        exit(-1);
+//
+//    }
+//    
+//    //REF fprintf http://www.tutorialspoint.com/c_standard_library/c_function_fprintf.htm
+//    fprintf(fp, "[%s]\n", time_label);
+////    fprintf(fp, "%s %s %s %d", "We", "are", "in", 2012);
+//    
+//    fprintf(fp, "%s\n", "<argv>");
+//    
+//    // argc
+//    fprintf(fp, "argc=%d: ", argc);
+//    
+//    fprintf(fp, "%s\n", argv_str);
+//    
+////    char *CR = "\n";
+////    
+////    fwrite(CR, 1, sizeof(CR), fp);
+////    fwrite('\n', 1, sizeof(char), fp);
+//    
+//    //REF fputc http://www.cplusplus.com/reference/cstdio/fputc/
+//    fputc('\n', fp);
+//    
+//    fclose(fp);
+//    
+//    //log
+//    printf("[%s : %d] file => closed: %s\n", 
+//            base_name(__FILE__), __LINE__, LOG_FILE_PATH);
+//
+//}
 
 /**************************
- * _Dispath_ModeOptions(int argc, char **argv)
+ * _Dispatch_ModeOptions(int argc, char **argv)
  * 
  * @return
  *      0 => Dispathing done. No further processing in main()
  *      1 => Dispathing not done. Further processing in main()
  * 
  **************************/
-int _Dispath_ModeOptions(int argc, char **argv)
+int _Dispatch_ModeOptions(int argc, char **argv)
 {
 
     /**************************
@@ -1835,7 +1876,7 @@ int _Dispath_ModeOptions(int argc, char **argv)
     
     return 1;
     
-}//int _Dispath_ModeOptions(int argc, char **argv)
+}//int _Dispatch_ModeOptions(int argc, char **argv)
 
 void Mode_Histo(int argc, char **argv)
 {
@@ -1850,6 +1891,153 @@ void Mode_Histo(int argc, char **argv)
     printf("[%s : %d] file_src => %s\n", base_name(__FILE__), __LINE__, file_src);
 
     consolColor_Reset();
+    
+    
+    /**************************
+     * Get: dst PNG file
+     **************************/
+    char *file_dst = _setup_FileName_Dst__Histo(argc, argv);
+    
+    consolColor_Change(GREEN);
 
+    //log
+    printf("[%s : %d] file_dst => %s\n", base_name(__FILE__), __LINE__, file_dst);
+
+    consolColor_Reset();
+    
+    /*************************************
+ 
+     * vars
+ 
+     **************************************/
+    int x, y;
+
+    // A
+    int width_A, height_A; int number_of_passes_A;
+    png_byte color_type_A, bit_depth_A;
+
+    png_structp png_ptr_A; png_infop info_ptr_A;
+    
+    // B
+    int width_B, height_B; int number_of_passes_B;
+    png_byte color_type_B, bit_depth_B;
+
+    png_structp png_ptr_B; png_infop info_ptr_B;
+    
+    /*************************************
+ 
+     * setup: vars
+ 
+     **************************************/
+    // png_ptr_A
+    png_ptr_A = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr_A)
+            abort_("[read_png_file] png_create_read_struct failed");
+    
+    // info_ptr_A
+    info_ptr_A = png_create_info_struct(png_ptr_A);
+    if (!info_ptr_A)
+            abort_("[read_png_file] png_create_info_struct failed");
+
+    // png_ptr_B
+    png_ptr_B = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr_B)
+            abort_("[read_png_file] png_create_read_struct failed");
+    
+    // info_ptr_B
+    info_ptr_B = png_create_info_struct(png_ptr_B);
+    if (!info_ptr_B)
+            abort_("[read_png_file] png_create_info_struct failed");
+
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] setup: vars => done\n", base_name(__FILE__), __LINE__);
+
+    consolColor_Reset();    
+
+    /*************************************
+ 
+     * Get: png info
+ 
+     **************************************/
+    get_PngInfo
+    (file_src, png_ptr_A, info_ptr_A,
+        &width_A, &height_A, &number_of_passes_A,
+        &color_type_A, &bit_depth_A);
+    
+    
+    //log
+    printf("[%s : %d] info_ptr_A->width => %d\n", 
+            base_name(__FILE__), __LINE__, info_ptr_A->width);
+
+    /*************************************
+ 
+     * read png
+ 
+     **************************************/
+    _test_ReadPng__Process
+    (file_src, png_ptr_A, info_ptr_A,
+        &width_A, &height_A, &number_of_passes_A,
+            &color_type_A, &bit_depth_A);
+
+    consolColor_Change(LIGHT_YELLOW);
+
+//    //log
+//    printf("[%s : %d] read png => done\n", base_name(__FILE__), __LINE__);
+
+    //log
+    printf("[%s : %d] png_ptr_A->width => %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_A->width);
+    printf("[%s : %d] width_A => %d\n", 
+            base_name(__FILE__), __LINE__, width_A);
+
+    
+    consolColor_Reset();
+    
+    /*************************************
+ 
+     * Build: dst png: info
+     * 
+     * 1. color type => use that of file A
+     * 2. depth => same as 1
+ 
+     **************************************/
+//    if(opt_merge_direc == 1) {          // 1: horizontal
         
-}
+    // png_ptr_B
+    width_B = width_A;
+    height_B = height_A;
+//    height_C = height_A + height_B;
+
+    color_type_B = color_type_A;
+    bit_depth_B = bit_depth_A;
+
+    png_ptr_B->width = width_B;
+    png_ptr_B->height = height_B;
+    png_ptr_B->color_type = color_type_B;
+    
+    info_ptr_B->rowbytes = info_ptr_A->rowbytes;
+
+    // png_ptr_A
+    png_ptr_A->width = width_A;
+    png_ptr_A->height = height_A;
+    png_ptr_A->color_type = color_type_A;
+    
+    //log
+    printf("[%s : %d] png_ptr_A->width => %d\n", 
+            base_name(__FILE__), __LINE__, png_ptr_A->width);
+    printf("[%s : %d] width_A => %d\n", 
+            base_name(__FILE__), __LINE__, width_A);
+    
+    /**************************
+     * Build: dst png: info
+     * 
+     * 
+     **************************/
+//    init_Row_Pointers_B(png_ptr_B, info_ptr_B);
+
+    
+}//void Mode_Histo(int argc, char **argv)

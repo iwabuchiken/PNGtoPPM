@@ -10,6 +10,7 @@
         <itemPath>include/ppmlib.h</itemPath>
       </logicalFolder>
       <itemPath>include/lib.h</itemPath>
+      <itemPath>include/main.h</itemPath>
       <itemPath>include/methods.h</itemPath>
       <itemPath>include/pnginfo.h</itemPath>
       <itemPath>include/pnglib.h</itemPath>
@@ -28,6 +29,7 @@
         <itemPath>utils/pgmlib.c</itemPath>
         <itemPath>utils/ppmlib.c</itemPath>
       </logicalFolder>
+      <itemPath>Mode_Histo.c</itemPath>
       <itemPath>lib.c</itemPath>
       <itemPath>merge_png.c</itemPath>
       <itemPath>methods.c</itemPath>
@@ -62,9 +64,13 @@
           <commandLine>-lpng</commandLine>
         </linkerTool>
       </compileType>
+      <item path="Mode_Histo.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="include/img_lib.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/lib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/methods.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -115,9 +121,13 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Mode_Histo.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="include/img_lib.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/lib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/methods.h" ex="false" tool="3" flavor2="0">
       </item>

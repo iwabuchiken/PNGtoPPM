@@ -669,6 +669,12 @@ int larger(int x, int y)
     
 }
 
+/**************************
+ * is_InArray(char *target, char **array, int array_len)
+ * 
+ * @return true, false
+ **************************/
+
 int is_InArray
 (char *target, char **array, int array_len)
 {
@@ -745,9 +751,9 @@ char *join(char joint, char **array, int num_of_elems)
         
         new_string = (char *) concat3(array[0], joint_str, array[1]);
         
-        //log
-        printf("[%s : %d] new_string => %s\n", 
-                base_name(__FILE__), __LINE__, new_string);
+//        //log
+//        printf("[%s : %d] new_string => %s\n", 
+//                base_name(__FILE__), __LINE__, new_string);
 
         
 //        //log

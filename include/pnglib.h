@@ -79,6 +79,8 @@ typedef enum {
 //char *bg_colors_2;
 //char *bg_colors_3 = "abcdef";
 
+char *Histo_RGB[];
+
 
 #ifdef	__cplusplus
 extern "C" {
@@ -92,6 +94,10 @@ extern "C" {
     
     // Array of histogram values
     int histo[MAX_BRIGHTNESS];
+    
+    int histo_R[MAX_BRIGHTNESS];
+    int histo_G[MAX_BRIGHTNESS];
+    int histo_B[MAX_BRIGHTNESS];
     
     // 1. max and minimum of the brightness value of a given PNG file
     // 2. used in the function: gen_HistoData(int width_A, int height_A)
@@ -174,6 +180,10 @@ extern "C" {
     (char*, png_structp, png_infop,
         int *, int *, png_byte *, png_byte *);
     
+    void writePNG_Histo
+    (char*, png_structp, png_infop,
+        int *, int *, png_byte *, png_byte *, char rgb_opt);
+    
     void _test_WritePng_Merge
     (char*, png_structp, png_infop,
         int *, int *,
@@ -248,8 +258,11 @@ extern "C" {
     void init_Row_Pointers_B__Histo(png_structp, png_infop, char *);
 
     void gen_HistoData(int, int);
+    void gen_HistoData_RGB(int, int, char *);
     
     void gen_HistoPixels(void);
+
+    char *get_Opt_Value(char **, const char *);
     
 #ifdef	__cplusplus
 }

@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Mode_Histo.o \
 	${OBJECTDIR}/lib.o \
 	${OBJECTDIR}/merge_png.o \
 	${OBJECTDIR}/methods.o \
@@ -67,6 +68,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pngtoppm: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pngtoppm ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/Mode_Histo.o: Mode_Histo.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Mode_Histo.o Mode_Histo.c
 
 ${OBJECTDIR}/lib.o: lib.c 
 	${MKDIR} -p ${OBJECTDIR}

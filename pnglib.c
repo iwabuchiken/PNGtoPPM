@@ -14,7 +14,9 @@ char *bg_colors_2[] = {
 
 int histo_png_size[2] = {255, 255};     // width, height
 
-
+// Historgram: which color element to use for a histogram PNG
+char *Histo_RGB[] = {"R", "G", "B", "ALL"};
+int Histo_RGB_len = 4;
 
 void show_message_png()
 {
@@ -406,6 +408,108 @@ void _test_WritePng__Process
     png_infop info_ptr,
     int *width, int *height,
     png_byte *color_type, png_byte *bit_depth)
+{
+    int y;
+    
+    /* create file */
+    FILE *fp = fopen(file_name, "wb");
+    if (!fp)
+            abort_("[write_png_file] File %s could not be opened for writing", file_name);
+
+    //log
+    printf("[%s : %d] file => opened: %s\n", base_name(__FILE__), __LINE__, file_name);
+
+
+    /* initialize stuff */
+    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr)
+            abort_("[write_png_file] png_create_write_struct failed");
+
+//    //log
+//    printf("[%s : %d] png_ptr => created\n", base_name(__FILE__), __LINE__);
+
+    
+    info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr)
+            abort_("[write_png_file] png_create_info_struct failed");
+
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during init_io");
+
+//    //log
+//    printf("[%s : %d] png_create_info_struct => done\n", base_name(__FILE__), __LINE__);
+
+    
+    png_init_io(png_ptr, fp);
+
+    //log
+    printf("[%s : %d] png_init_io => done\n", base_name(__FILE__), __LINE__);
+
+
+    /* write header */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during writing header");
+
+    png_set_IHDR(png_ptr, info_ptr, *width, *height,
+                 *bit_depth, *color_type, PNG_INTERLACE_NONE,
+                 PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+
+//    //log
+//    printf("[%s : %d] png_ptr->height => %d\n",
+//            base_name(__FILE__), __LINE__, png_ptr->height);
+//    
+//    printf("[%s : %d] info_ptr->height => %d\n",
+//            base_name(__FILE__), __LINE__, info_ptr->height);
+
+    
+//    //log
+//    printf("[%s : %d] png_set_IHDR => done\n", base_name(__FILE__), __LINE__);
+
+    
+    png_write_info(png_ptr, info_ptr);
+
+//    //log
+//    printf("[%s : %d] png_write_info => done\n", base_name(__FILE__), __LINE__);
+//
+//    //log
+//    printf("[%s : %d] png_ptr->height => %d\n",
+//            base_name(__FILE__), __LINE__, png_ptr->height);
+//    printf("[%s : %d] png_ptr->width => %d\n",
+//            base_name(__FILE__), __LINE__, png_ptr->width);
+
+    /* write bytes */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during writing bytes");
+
+    png_write_image(png_ptr, row_pointers_B);
+
+//    //log
+//    printf("[%s : %d] png_write_image => done\n", base_name(__FILE__), __LINE__);
+
+
+    /* end write */
+    if (setjmp(png_jmpbuf(png_ptr)))
+            abort_("[write_png_file] Error during end of write");
+
+    png_write_end(png_ptr, NULL);
+
+    /* cleanup heap allocation */
+    for (y=0; y < *height; y++)
+//    for (y=0; y<height; y++)
+            free(row_pointers_B[y]);
+    free(row_pointers_B);
+
+    fclose(fp);
+}//void write_png_file()
+
+void writePNG_Histo
+(char* file_name, png_structp png_ptr,
+    png_infop info_ptr,
+    int *width, int *height,
+    png_byte *color_type, png_byte *bit_depth, char rgb_opt)
+//(char*, png_structp, png_infop,
+//int *, int *, png_byte *, png_byte *, char rgb_opt)
 {
     int y;
     
@@ -2415,6 +2519,136 @@ void gen_HistoData(int width_A, int height_A)
 
 }//void gen_HistoData(int width_A, int height_A)
 
+//void gen_HistoData_RGB(int, int, char *)
+void gen_HistoData_RGB
+(int width_A, int height_A, char *rgb_opt)
+{
+    int x, y;
+    
+    for (y = 0; y < height_A; y++) {
+
+        png_byte *row_A = row_pointers_A[y];
+        
+        for (x = 0; x < width_A; x++) {
+
+            png_byte *ptr_A = &(row_A[x * 3]);
+            
+            if (!strcmp(rgb_opt, Histo_RGB[0])) { // R
+                
+                histo_R[ptr_A[0]] ++;
+
+            } else if (!strcmp(rgb_opt, Histo_RGB[1])) { // G
+                
+                histo_G[ptr_A[1]] ++;
+                
+            } else if (!strcmp(rgb_opt, Histo_RGB[2])) { // B
+                
+                histo_B[ptr_A[2]] ++;
+                
+            } else if (!strcmp(rgb_opt, Histo_RGB[3])) { // ALL
+                
+                consolColor_Change(RED);
+
+                //log
+                printf("[%s : %d] Sorry. Under construction for rgb option => %s\n",
+                        base_name(__FILE__), __LINE__, rgb_opt);
+
+                consolColor_Reset();
+                
+                exit(-1);
+                
+            }
+            
+//            histo[ptr_A[1]] ++;
+//            histo[ptr_A[2]] ++;
+//            histo[ptr_A[0]] ++;
+
+        }
+
+    }//for (y = 0; y < height_A; y++)
+
+    /**************************
+     * Get: range
+     **************************/
+    // max
+    int *histo_tmp;
+//    int histo_tmp[MAX_BRIGHTNESS];
+    
+    if (!strcmp(rgb_opt, Histo_RGB[0])) // R
+                
+                histo_tmp = histo_R;
+
+    else if (!strcmp(rgb_opt, Histo_RGB[1])) // G
+                
+                histo_tmp = histo_G;
+                
+    else if (!strcmp(rgb_opt, Histo_RGB[2])) // B
+                
+                histo_tmp = histo_B;
+                
+    else if (!strcmp(rgb_opt, Histo_RGB[3])) { // ALL
+                
+                consolColor_Change(RED);
+
+                //log
+                printf("[%s : %d] Sorry. Under construction for rgb option => %s\n",
+                        base_name(__FILE__), __LINE__, rgb_opt);
+
+                consolColor_Reset();
+                
+                exit(-1);
+                
+    }
+    
+    /**************************
+     * Set: histo_range
+     **************************/
+    int tmp = histo_tmp[0];
+    int i;      // iterator
+    
+    for (i = 0; i < MAX_BRIGHTNESS; i++) {
+
+        if(histo_tmp[i] > tmp)
+            tmp = histo_tmp[i];
+
+    }
+    
+    histo_range[0] = tmp;
+    
+    // minimum
+    tmp = histo_tmp[0];
+    
+    for (i = 0; i < MAX_BRIGHTNESS; i++) {
+
+        if(histo_tmp[i] < tmp)
+            tmp = histo_tmp[i];
+
+    }
+    
+    histo_range[1] = tmp;
+    
+    /**************************
+     * Histo data => Convert to the range
+     **************************/
+    //test
+    //log
+    printf("[%s : %d] max in histo_tmp[] => %d\n", 
+            base_name(__FILE__), __LINE__, get_max_element(histo, MAX_BRIGHTNESS));
+
+    
+    for (i = 0; i < MAX_BRIGHTNESS; i++) {
+
+        histo_tmp[i] = MAX_BRIGHTNESS * histo_tmp[i] / histo_range[0];
+
+    }
+
+    //log
+    printf("[%s : %d] max in histo_tmp[] => %d\n", 
+            base_name(__FILE__), __LINE__, get_max_element(histo, MAX_BRIGHTNESS));
+
+
+}//void gen_HistoData(int width_A, int height_A)
+
 void gen_HistoPixels()
 {
     int width = histo_png_size[0];
@@ -2564,3 +2798,302 @@ void gen_HistoPixels()
     row_pointers_B = row_pointers_C;
     
 }//void gen_HistoPixels()
+
+void gen_HistoPixels_RGB(char *rgb_opt)
+{
+    int width = histo_png_size[0];
+    int height = histo_png_size[1];
+    
+    int x, y;
+    
+    //log
+    printf("[%s : %d] Start => for loop\n", base_name(__FILE__), __LINE__);
+
+    
+    for (y = 0; y < height; y++) {
+
+        png_byte *row_B = row_pointers_B[y];
+        
+//        //log
+//        printf("[%s : %d] y => %d\n", base_name(__FILE__), __LINE__, y);
+        int width_max;
+        
+        if (!strcmp(rgb_opt, Histo_RGB[0])) { // R
+
+            width_max = histo_R[y];
+
+        } else if (!strcmp(rgb_opt, Histo_RGB[1])) { // G
+
+            width_max = histo_G[y];
+
+        } else if (!strcmp(rgb_opt, Histo_RGB[2])) { // B
+
+            width_max = histo_B[y];
+
+        } else if (!strcmp(rgb_opt, Histo_RGB[3])) { // ALL
+
+            consolColor_Change(RED);
+
+            //log
+            printf("[%s : %d] Sorry. Under construction for rgb option => %s\n",
+                    base_name(__FILE__), __LINE__, rgb_opt);
+
+            consolColor_Reset();
+
+            exit(-1);
+
+        }
+        
+        
+        for (x = 0; x < width_max; x++) {
+//        for (x = 0; x < histo[y]; x++) {
+            
+//            //log
+//            printf("[%s : %d] histo[y] => %d\n", 
+//                    base_name(__FILE__), __LINE__, histo[y]);
+
+
+            png_byte *ptr_B = &(row_B[x * 3]);
+            
+            if (!strcmp(rgb_opt, Histo_RGB[0])) { // R
+                
+                int colors[3] = {PIXEL_RED};
+
+                set_PixelVals_2(ptr_B, colors);
+
+            } else if (!strcmp(rgb_opt, Histo_RGB[1])) { // G
+                
+                int colors[3] = {PIXEL_GREEN};
+
+                set_PixelVals_2(ptr_B, colors);
+                
+            } else if (!strcmp(rgb_opt, Histo_RGB[2])) { // B
+                
+                int colors[3] = {PIXEL_BLUE};
+
+                set_PixelVals_2(ptr_B, colors);
+                
+            } else if (!strcmp(rgb_opt, Histo_RGB[3])) { // ALL
+                
+                consolColor_Change(RED);
+
+                //log
+                printf("[%s : %d] Sorry. Under construction for rgb option => %s\n",
+                        base_name(__FILE__), __LINE__, rgb_opt);
+
+                consolColor_Reset();
+                
+                exit(-1);
+                
+            }
+            
+//            int colors[3] = {PIXEL_GREEN};
+////            colors[] = {PIXEL_GREEN};
+//            
+//            set_PixelVals_2(ptr_B, colors);
+//            set_PixelVals(ptr_B, PIXEL_GREEN);
+//            set_PixelVals(ptr_B, PIXEL_BLUE);
+//            ptr_B[0] = 255;
+//            ptr_B[1] = 0;
+//            ptr_B[2] = 0;
+
+        }
+
+    }//for (y = 0; y < height_A; y++)
+
+    /**************************
+     * Rotate pixels
+     **************************/
+    for (y = 0; y < height; y++) {
+
+//        png_byte *row_B = row_pointers_B[0];
+        png_byte *row_B = row_pointers_B[y];
+        
+//        //log
+//        printf("[%s : %d] y => %d\n", base_name(__FILE__), __LINE__, y);
+
+        
+        for (x = 0; x < width; x++) {
+            
+            png_byte *ptr_B = &(row_B[x * 3]);
+            
+//            //log
+//            printf("[%s : %d] (width - 1) - x = %d\n", 
+//                base_name(__FILE__), __LINE__, ((width - 1) - x));
+
+            
+            row_pointers_C[(width - 1) - x][y * 3 + 0] = ptr_B[0];
+            row_pointers_C[(width - 1) - x][y * 3 + 1] = ptr_B[1];
+            row_pointers_C[(width - 1) - x][y * 3 + 2] = ptr_B[2];
+//            row_pointers_C[(width - 1) - x][0] = ptr_B[0];
+//            row_pointers_C[(width - 1) - x][1] = ptr_B[1];
+//            row_pointers_C[(width - 1) - x][2] = ptr_B[2];
+//            row_pointers_C[0][(width - 1) - x] = ptr_B[0];
+//            row_pointers_C[1][(width - 1) - x] = ptr_B[1];
+//            row_pointers_C[2][(width - 1) - x] = ptr_B[2];
+//            row_pointers_C[x][y] = row_pointers_B[y][(width - 1) - x];
+//            row_pointers_C[x][y] = row_pointers_B[y][width - 1];
+//        for (x = 0; x < histo[y]; x++) {
+            
+//            //log
+//            printf("[%s : %d] histo[y] => %d\n", 
+//                    base_name(__FILE__), __LINE__, histo[y]);
+
+
+//            png_byte *ptr_B = &(row_B[x * 3]);
+//            
+//            int colors[3] = {PIXEL_GREEN};
+////            colors[] = {PIXEL_GREEN};
+//            
+//            set_PixelVals_2(ptr_B, colors);
+//            set_PixelVals(ptr_B, PIXEL_GREEN);
+//            set_PixelVals(ptr_B, PIXEL_BLUE);
+//            ptr_B[0] = 255;
+//            ptr_B[1] = 0;
+//            ptr_B[2] = 0;
+
+        }
+
+    }//for (y = 0; y < height_A; y++)
+    
+////    for (y = 0; y < height; y++) {
+//
+//        png_byte *row_B = row_pointers_B[0];
+////        png_byte *row_B = row_pointers_B[y];
+//        
+////        //log
+////        printf("[%s : %d] y => %d\n", base_name(__FILE__), __LINE__, y);
+//
+//        
+//        for (x = 0; x < width; x++) {
+//            
+//            png_byte *ptr_B = &(row_B[x * 3]);
+//            
+//            //log
+//            printf("[%s : %d] (width - 1) - x = %d\n", 
+//                base_name(__FILE__), __LINE__, ((width - 1) - x));
+//
+//            
+//            row_pointers_C[(width - 1) - x][0] = ptr_B[0];
+//            row_pointers_C[(width - 1) - x][1] = ptr_B[1];
+//            row_pointers_C[(width - 1) - x][2] = ptr_B[2];
+////            row_pointers_C[0][(width - 1) - x] = ptr_B[0];
+////            row_pointers_C[1][(width - 1) - x] = ptr_B[1];
+////            row_pointers_C[2][(width - 1) - x] = ptr_B[2];
+////            row_pointers_C[x][y] = row_pointers_B[y][(width - 1) - x];
+////            row_pointers_C[x][y] = row_pointers_B[y][width - 1];
+////        for (x = 0; x < histo[y]; x++) {
+//            
+////            //log
+////            printf("[%s : %d] histo[y] => %d\n", 
+////                    base_name(__FILE__), __LINE__, histo[y]);
+//
+//
+////            png_byte *ptr_B = &(row_B[x * 3]);
+////            
+////            int colors[3] = {PIXEL_GREEN};
+//////            colors[] = {PIXEL_GREEN};
+////            
+////            set_PixelVals_2(ptr_B, colors);
+////            set_PixelVals(ptr_B, PIXEL_GREEN);
+////            set_PixelVals(ptr_B, PIXEL_BLUE);
+////            ptr_B[0] = 255;
+////            ptr_B[1] = 0;
+////            ptr_B[2] = 0;
+//
+//        }
+//
+////    }//for (y = 0; y < height_A; y++)
+//    
+    row_pointers_B = row_pointers_C;
+    
+}//void gen_HistoPixels()
+
+char *get_Opt_Value(char **argv, const char *opt)
+{
+    char *opt_val;
+    
+    int i = 0;
+    int flag = false;   // true if "-rgb" values given
+    
+    while(*(argv + i) != NULL) {
+        
+        if(!strcmp(*(argv + i), opt)) {
+//        if(!strcmp(*(argv + i), "-dst")) {
+            
+            i ++;
+            
+            if(*(argv + i) != NULL) {
+                
+                int len = strlen(*(argv + i));
+                
+                opt_val = (char *) malloc(sizeof(char) * (len + 1));
+                
+                strcpy(opt_val, *(argv + i));
+                
+                opt_val[len] = '\0';
+                
+                flag = true;
+                
+                break;
+                
+            } else {
+
+                consolColor_Change(RED);
+
+                //log
+                printf("[%s : %d] value not given for \"%s\"\n", 
+                        base_name(__FILE__), __LINE__, opt);
+
+                consolColor_Reset();
+
+                exit(-1);
+                
+            }
+            
+        }
+        
+        i ++;
+        
+    }//while(*(argv + i) != NULL)
+
+    if(flag == false) {
+        
+        //log
+        printf("[%s : %d] \"%s\" option => not given\n", 
+                base_name(__FILE__), __LINE__, opt);
+//        printf("option => not given\n");
+        
+        exit(-1);
+
+    }
+
+    /**************************
+     * Validate: opt value => in the array?
+     **************************/
+    int res_i =  is_InArray(opt_val, Histo_RGB, Histo_RGB_len);
+    
+    if(res_i != true) {
+        
+        consolColor_Change(RED);
+
+        //log
+        printf("[%s : %d] Unknown option value for '%s' => %s\n",
+                base_name(__FILE__), __LINE__, opt, opt_val);
+        
+        //log
+        char *msg = join(',', Histo_RGB, Histo_RGB_len);
+        
+        printf("[%s : %d] Available values =L> %s (%d items)\n", 
+                base_name(__FILE__), __LINE__, msg, Histo_RGB_len);
+
+
+        consolColor_Reset();
+        
+        exit(-1);
+        
+    }
+    
+    return opt_val;   
+    
+}

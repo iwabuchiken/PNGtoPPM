@@ -25,6 +25,8 @@ extern "C" {
     
 #define RED  "\033[22;31m"
 #define GREEN  "\033[22;32m"
+#define BLUE  "\033[22;34m"
+#define LIGHT_BLUE  "\033[22;94m"
 #define LIGHT_YELLOW  "\033[22;93m"
 #define RESETCOLOR "\033[0m"
 
@@ -77,6 +79,31 @@ extern "C" {
 #include <string.h>
 #endif
 
+#ifndef TIME_H
+#define TIME_H
+#include <time.h>
+#endif
+
+#ifndef LOCALE_H
+#define LOCALE_H
+#include <locale.h>
+#endif
+    
+#ifndef SYS_TIME_H
+#define SYS_TIME_H
+#include <sys/time.h>
+#endif
+    
+///////////////////////////////////////////////////////
+
+// Defines
+
+///////////////////////////////////////////////////////
+#ifndef TRUE_FALSE
+#define TRUE_FALSE
+#define true    1
+#define false   0
+#endif
     
 ///////////////////////////////////////////////////////
 
@@ -150,16 +177,24 @@ typedef enum
 
 } RetVals;
 
+typedef enum {
+    
+    STANDARD, SERIAL, SEC
+    
+} TimeLabelType;
+
 ///////////////////////////////////////////////////////
 
 // Prototypes
 
 ///////////////////////////////////////////////////////
-char *get_FileSep_Str(void);
 char* base_name(char*);	    // abc\def.txt ==> \def.txt
 char* base_name_2(char*);   // abc\def.txt ==> def.txt (No separator)
 
+int is_InArray(char *, char **, int);
+
 char get_FileSep(void);
+char *get_FileSep_Str(void);
 
 int textcolor(void);
 int backcolor(void);
@@ -188,7 +223,15 @@ char ** str_split_r_2(char *, char, int, int *);
 
 char* concat(char *, char *);
 
-int max(int, int);
+int larger(int, int);
+
+char *join(char, char **, int num);
+
+char *join_simple(char **, int num);
+
+char *get_TimeLabel_Now(TimeLabelType);
+
+int get_max_element(int *, int);
 
 #ifdef	__cplusplus
 }

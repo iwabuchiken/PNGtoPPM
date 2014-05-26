@@ -3,6 +3,8 @@
 #endif
 
 
+//#include <stdlib.h>
+
 char *get_FileSep_Str()
 {
 	char *sep = (char *) malloc (sizeof(char) * 2);
@@ -162,6 +164,8 @@ void consolColor_Reset(void)
 
 	@param
 		num => Number of tokes obtained: for return purpose
+ *      @return
+ *              NULL    => split count is < 1
 ************************************/
 char** str_split_3
 (char* a_str, const char a_delim, int *num)
@@ -188,6 +192,17 @@ char** str_split_3
 
     char* token;
 
+//    //log
+//    printf("[%s : %d] a_delim => %c\n", 
+//            base_name(__FILE__), __LINE__, a_delim);
+//    
+//    //log
+//    printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+//
+//    //log
+//    printf("[%s : %d] a_str => %s\n", base_name(__FILE__), __LINE__, a_str);
+
+
     /************************************
      * operations
     ************************************/
@@ -198,9 +213,9 @@ char** str_split_3
     a_str_new = (char *) malloc(sizeof(char) * (strlen(a_str) + 1));
 //    a_str_new = malloc(sizeof(char) * (strlen(a_str) + 1));
     
-    //log
-    printf("[%s:%d] malloc => done for a_str_new (a_str=%s)\n",
-	    base_name(__FILE__), __LINE__, a_str);
+//    //log
+//    printf("[%s:%d] malloc => done for a_str_new (a_str=%s)\n",
+//	    base_name(__FILE__), __LINE__, a_str);
 
     if (a_str_new == NULL) {
 
@@ -211,16 +226,16 @@ char** str_split_3
 
     } else {
 
-	    //log
-	    printf("[%s:%d] malloc done for => a_str_new\n", base_name(__FILE__), __LINE__);
+//	    //log
+//	    printf("[%s:%d] malloc done for => a_str_new\n", base_name(__FILE__), __LINE__);
 
 
     }
 
     strcpy(a_str_new, a_str);
 
-    //log
-    printf("[%s : %d] strcpy => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] strcpy => done\n", base_name(__FILE__), __LINE__);
 
     
     while (*tmp)
@@ -248,8 +263,9 @@ char** str_split_3
 
     }
 
-    //log
-    printf("[%s : %d] count >= 1\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] count >= 1 (count = %d)\n", 
+//            base_name(__FILE__), __LINE__, count);
 
     
     // Input value to the param 'num'
@@ -275,11 +291,8 @@ char** str_split_3
 
     }
     
-    //log
-    printf("[%s : %d] malloc => done\n", base_name(__FILE__), __LINE__);
-
-
-
+//    //log
+//    printf("[%s : %d] malloc => done for 'result'\n", base_name(__FILE__), __LINE__);
 
     if (result)
     {
@@ -296,7 +309,7 @@ char** str_split_3
             *(result + idx++) = strdup(token);
 
 //            //log
-//			printf("[%s:%d] token => %s\n", base_name(__FILE__), __LINE__, token);
+//            printf("[%s:%d] token => %s\n", base_name(__FILE__), __LINE__, token);
 
 
             token = strtok(0, delim);
@@ -311,46 +324,56 @@ char** str_split_3
 
     }//if (result)
 
-    //log
-    printf("[%s : %d] tokenize => done\n", base_name(__FILE__), __LINE__);
-
-    
-//    if(result) {
-//
-//    	int i;
-//
-//    	for (i = 0; *(result + i); ++i) {
-//
-//    		//log
-//			printf("[%s:%d] tokens[%d] => %s\n",
-//					base_name(__FILE__), __LINE__, i, *(result + i));
-//
-//		}
-//
-//    }//if(result)
-
 //    //log
-//    while(*result) {
-//
-//    	//log
-//		printf("[%s:%d] *result => %s\n", base_name(__FILE__), __LINE__, *result);
-//
-//		result ++;
-//
-//    }
+//    printf("[%s : %d] tokenize => done\n", base_name(__FILE__), __LINE__);
 
     return result;
 
 }//char** str_split(char* a_str, const char a_delim)
 
+/**************************
+ * char* concat3(char *s1, char *s2, char *s3)
+ * 
+ * @usage
+ *      1. Returned char * has null char at the end
+ *              of the string. So, you don't need to
+ *              add the null char to the receiving var
+ *              in the caller.
+ *      2. Rather, if you want to add the null char to
+ *              the var in the caller, you must malloc
+ *              the extra 2 char space instead of just
+ *              1 char.
+ **************************/
 char* concat3(char *s1, char *s2, char *s3)
 {
     size_t len1 = strlen(s1);
     size_t len2 = strlen(s2);
     size_t len3 = strlen(s3);
 
-    char *result = malloc(len1+len2+len3+1);//+1 for the zero-terminator
+//    //log
+//    printf("[%s : %d] sizeof(char) => %d\n", base_name(__FILE__), __LINE__, sizeof(char));
 
+//    //log
+//    printf("[%s : %d] len1+len2+len3+1 => %d\n", 
+//            base_name(__FILE__), __LINE__, (len1+len2+len3+1));
+//
+//    //log
+//    printf("[%s : %d] len2 => %d\n", base_name(__FILE__), __LINE__, len2);
+
+    
+    char *result = (char *) malloc(sizeof(char) * (len1+len2+len3+1));//+1 for the zero-terminator
+//    char *result = malloc(len1+len2+len3+1);//+1 for the zero-terminator
+
+//    //log
+//    printf("[%s : %d] result => mallocked\n", base_name(__FILE__), __LINE__);
+//
+//    //log
+//    printf("[%s : %d] s1 => %s\n", base_name(__FILE__), __LINE__, s1);
+//    printf("[%s : %d] s2 => %s\n", base_name(__FILE__), __LINE__, s2);
+//    printf("[%s : %d] s3 => %s\n", base_name(__FILE__), __LINE__, s3);
+
+    
+    
     if (result == NULL) {
 
     	//log
@@ -363,10 +386,22 @@ char* concat3(char *s1, char *s2, char *s3)
 //    char *result = malloc(len1+len2+1);//+1 for the zero-terminator
     //in real code you would check for errors in malloc here
     memcpy(result, s1, len1);
+    
+//    //log
+//    printf("[%s : %d] result => %s\n", base_name(__FILE__), __LINE__, result);
+
+    
     memcpy(result+len1, s2, len2);
+    
+//    //log
+//    printf("[%s : %d] result => %s\n", base_name(__FILE__), __LINE__, result);
+    
     memcpy(result+len1+len2, s3, len3+1);//+1 to copy the null-terminator
 //    memcpy(result+len1, s2, len2+1);//+1 to copy the null-terminator
 
+//    //log
+//    printf("[%s : %d] result => %s\n", base_name(__FILE__), __LINE__, result);
+    
     return result;
 
 }
@@ -628,8 +663,390 @@ char get_FileSeparator()
 
 }
 
-int max(int x, int y)
+int larger(int x, int y)
 {
     return (x >= y) ? x : y;
     
 }
+
+/**************************
+ * is_InArray(char *target, char **array, int array_len)
+ * 
+ * @return true, false
+ **************************/
+
+int is_InArray
+(char *target, char **array, int array_len)
+{
+    int i;
+    
+    for (i = 0; i < array_len; i++) {
+
+        if(!strcmp(target, array[i])) {
+            
+            return true;
+            
+        }
+
+    }
+
+    return false;
+    
+}
+
+/**************************
+ * join()
+ * 
+ * 
+ **************************/
+char *join(char joint, char **array, int num_of_elems)
+{
+    /**************************
+     * Validations
+     **************************/
+    if(array == NULL || joint == NULL) return NULL;
+    
+    /**************************
+     * Length: 1
+     **************************/
+    if(num_of_elems == 1) return array[0];
+    
+    /**************************
+     * Length: 2
+     **************************/
+    if(num_of_elems == 2) {
+        
+        char *joint_str[2];
+        
+        joint_str[0] = joint;
+        joint_str[1] = '\0';
+        
+        int len = strlen(array[0]) + strlen(array[1]) + sizeof(joint_str);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat3(array[0], joint_str, array[1]);
+//        new_string = concat(array[0], array[1]);
+        
+        new_string[len] = '\0';
+        
+        return new_string;
+        
+    }
+    
+    /**************************
+     * Length: 3
+     **************************/
+    if(num_of_elems >= 3) {
+//    if(num_of_elems == 3) {
+        
+        char *joint_str[2];
+        
+        joint_str[0] = joint;
+        joint_str[1] = '\0';
+        
+        int len = strlen(array[0]) + strlen(array[1]) + sizeof(joint_str);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat3(array[0], joint_str, array[1]);
+        
+//        //log
+//        printf("[%s : %d] new_string => %s\n", 
+//                base_name(__FILE__), __LINE__, new_string);
+
+        
+//        //log
+//        printf("[%s : %d] joint_str => %s\n", 
+//                base_name(__FILE__), __LINE__, joint_str);
+
+        
+        int i;
+        
+        for(i = 2; i < num_of_elems; i++) {
+            
+            int len = strlen(new_string);
+//            int len = sizeof(new_string);
+            
+//            //log
+//            printf("[%s : %d] len => %d\n", base_name(__FILE__), __LINE__, len);
+
+            
+            char *tmp = (char *) malloc(len + 1);
+            
+            strcpy(tmp, new_string);
+            
+            tmp[len] = '\0';
+            
+//            //log
+//            printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+//            printf("[%s : %d] array[i] => %s\n", 
+//                    base_name(__FILE__), __LINE__, array[i]);
+
+            
+            len = strlen(tmp) + strlen(array[i]) + joint_str;
+            
+//            //log
+//            printf("[%s : %d] joint_str => %s\n", 
+//                    base_name(__FILE__), __LINE__, joint_str);
+            
+            free(new_string);
+            
+//            //log
+//            printf("[%s : %d] new_string => freed\n", base_name(__FILE__), __LINE__);
+
+            
+            new_string = (char *) malloc(sizeof(char) * (len + 1));
+            
+//            //log
+//            printf("[%s : %d] new_string => mallocked\n", base_name(__FILE__), __LINE__);
+//            new_string = (char *) realloc(new_string, (len + 1));
+//            
+//            //log
+//            printf("[%s : %d] new_string => reallocked\n", base_name(__FILE__), __LINE__);
+            
+//            //log
+//            printf("[%s : %d] joint_str => %s\n", 
+//                    base_name(__FILE__), __LINE__, joint_str);
+
+            
+            new_string = concat3(tmp, joint_str, array[i]);
+            
+//            //log
+//            printf("[%s : %d] back from concat3()\n", base_name(__FILE__), __LINE__);
+//
+//            //log
+//            printf("[%s : %d] new_string => %s\n", 
+//                    base_name(__FILE__), __LINE__, new_string);
+
+//            new_string[len] = '\0';
+//            
+//            //log
+//            printf("[%s : %d] new_string => %s\n", 
+//                    base_name(__FILE__), __LINE__, new_string);
+
+            free(tmp);
+            
+        }//for(i = 2; i < num_of_elems; i++)
+        
+        return new_string;
+        
+    }//if(num_of_elems == 3)
+    
+}//char *join(char joint, char **array, int num_of_elems)
+
+/**************************
+ * join_simple()
+ * 
+ * 
+ **************************/
+char *join_simple(char **array, int num_of_elems)
+{
+    /**************************
+     * Validations
+     **************************/
+    if(array == NULL) return NULL;
+    
+    /**************************
+     * Length: 1
+     **************************/
+    if(num_of_elems == 1) return array[0];
+    
+    /**************************
+     * Length: 2
+     **************************/
+    if(num_of_elems == 2) {
+        
+        int len = strlen(array[0]) + strlen(array[1]);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat(array[0], array[1]);
+//        new_string = concat(array[0], array[1]);
+        
+        new_string[len] = '\0';
+        
+        return new_string;
+        
+    }
+    
+    /**************************
+     * Length: 3
+     **************************/
+    if(num_of_elems >= 3) {
+        
+        int len = strlen(array[0]) + strlen(array[1]);
+        
+        char *new_string = (char *) malloc(sizeof(char) * (len + 1));
+        
+        new_string = (char *) concat(array[0], array[1]);
+        
+        //log
+        printf("[%s : %d] new_string => %s\n", 
+                base_name(__FILE__), __LINE__, new_string);
+
+        int i;
+        
+        for(i = 2; i < num_of_elems; i++) {
+            
+            int len = sizeof(new_string);
+            
+//            char *tmp = (char *) malloc(len + 1);
+//            
+//            strcpy(tmp, new_string);
+//            
+//            tmp[len] = '\0';
+//            
+//            //log
+//            printf("[%s : %d] tmp => %s\n", base_name(__FILE__), __LINE__, tmp);
+
+            
+//            int len = strlen(new_string) + strlen(array[i]) + joint_str;
+            
+//            free(new_string);
+            
+//            new_string = (char *) realloc(new_string, (len + 1));
+            new_string = concat(new_string, array[i]);
+//            new_string = concat3(new_string, joint_str, array[i]);
+            
+            
+            
+        }//for(i = 2; i < num_of_elems; i++)
+        
+        return new_string;
+        
+    }//if(num_of_elems == 3)
+    
+}//char *join(char joint, char **array, int num_of_elems)
+
+char *get_TimeLabel_Now(TimeLabelType type)
+{
+    //REF http://www.cplusplus.com/reference/ctime/localtime/
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    char *time_label = (char *) malloc(sizeof(char) * 20);
+//    char time_label[20];
+    
+//    //REF http://souptonuts.sourceforge.net/code/gettimeofday.c.html
+//    struct timeval tv;
+//    gettimeofday(&tv, NULL);
+//    
+//    //log
+//    printf("[%s : %d] tv.tv_usec => %ld\n", 
+////    printf("[%s : %d] tv.tv_usec => %d\n", 
+//            base_name(__FILE__), __LINE__, tv.tv_usec);
+
+//    printf("%s%ld\n",buffer,tv.tv_usec);
+    
+    //REF setlocale http://en.cppreference.com/w/cpp/locale/setlocale
+//    char *loc = setlocale(LC_TIME, "en_GB");
+    char *loc = setlocale(LC_TIME, "ja_JP");
+//    char *loc = setlocale(LC_ALL, "");
+//    char *loc = setlocale(LC_ALL, "ja_JP");
+    
+//    //log
+//    printf("[%s : %d] loc => %s\n", base_name(__FILE__), __LINE__, loc);
+
+    
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    
+//    clock_t t1, t2;
+//
+//    t1 = clock();
+//    
+//    //log
+//    printf("[%s : %d] t1 => %f\n", base_name(__FILE__), __LINE__, (float) t1);
+////    printf("[%s : %d] t1 => %d\n", base_name(__FILE__), __LINE__, t1);
+
+    /**************************
+     * Formatting
+     **************************/
+    if (type == STANDARD) {
+
+        strftime(time_label, 20, "%Y:%m:%d %H:%M:%S", timeinfo);
+        time_label[19] = '\0';
+        
+    } else if (type == SERIAL) {
+        
+        strftime(time_label, 20, "%Y%m%d_%H%M%S", timeinfo);
+        time_label[19] = '\0';
+        
+    } else if (type == SEC) {
+        
+//        strftime(time_label, 20, "%Y:%m:%d %H:%M:%S", timeinfo);
+        
+//        itoa(rawtime, time_label);
+//        itoa(rawtime, time_label, 10);
+        sprintf(time_label, "%d", rawtime);
+        
+        time_label[19] = '\0';
+        
+    } else {
+        
+        consolColor_Change(RED);
+
+        //log
+        printf("[%s : %d] Unknow time label type: %d\n",
+                base_name(__FILE__), __LINE__, type);
+
+        consolColor_Reset();
+        
+        exit(-1);
+        
+    }
+    
+    
+//    //log
+//    printf("[%s : %d] time_label => %s (len = %d)\n", 
+//            base_name(__FILE__), __LINE__, time_label, strlen(time_label));
+
+    
+//    printf ("Current local time and date: %s", asctime(timeinfo));
+//    printf ("timeinfo->tm_hour: %d\n", timeinfo->tm_hour);
+//    
+//    char h[2];
+//    
+//    sprintf(h, "%02d", timeinfo->tm_hour);
+//    
+//    printf ("timeinfo->tm_hour: %d\n", timeinfo->tm_hour);
+//    
+//    //log
+//    printf("[%s : %d] h => %s\n", base_name(__FILE__), __LINE__, h);
+
+    
+    return time_label;
+//    return NULL;
+    
+}
+
+/**************************
+ * get_max_element(int *array, int num_of_elements)
+ * 
+ * @return NULL => 1. array size < 1
+ **************************/
+int get_max_element(int *array, int num_of_elements)
+{
+    /**************************
+     * Validation
+     **************************/
+    if(array == NULL) return NULL;
+    if(num_of_elements == NULL
+            || num_of_elements < 1) return NULL;
+
+    /**************************
+     * vars
+     **************************/
+    int i;
+    int tmp = array[0];
+    
+    for (i = 0; i < num_of_elements; i++) {
+
+        if(array[i] > tmp) tmp = array[i];
+
+    }
+
+    return tmp;
+    
+}//int get_max_element(int *array, int num_of_elements)

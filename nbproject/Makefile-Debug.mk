@@ -35,10 +35,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Mode_Histo.o \
 	${OBJECTDIR}/lib.o \
 	${OBJECTDIR}/merge_png.o \
+	${OBJECTDIR}/methods.o \
 	${OBJECTDIR}/pnglib.o \
-	${OBJECTDIR}/readpng.o \
 	${OBJECTDIR}/utils/img_lib.o \
 	${OBJECTDIR}/utils/pgmlib.o \
 	${OBJECTDIR}/utils/ppmlib.o
@@ -68,6 +69,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pngtoppm: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pngtoppm ${OBJECTFILES} ${LDLIBSOPTIONS} -lpng
 
+${OBJECTDIR}/Mode_Histo.o: Mode_Histo.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Mode_Histo.o Mode_Histo.c
+
 ${OBJECTDIR}/lib.o: lib.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -78,15 +84,15 @@ ${OBJECTDIR}/merge_png.o: merge_png.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/merge_png.o merge_png.c
 
+${OBJECTDIR}/methods.o: methods.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/methods.o methods.c
+
 ${OBJECTDIR}/pnglib.o: pnglib.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pnglib.o pnglib.c
-
-${OBJECTDIR}/readpng.o: readpng.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/readpng.o readpng.c
 
 ${OBJECTDIR}/utils/img_lib.o: utils/img_lib.c 
 	${MKDIR} -p ${OBJECTDIR}/utils

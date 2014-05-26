@@ -140,6 +140,27 @@ extern "C" {
             int, int
         );
     
+    void merge_PngSrcs_Hori_General
+    (
+        int, int, 
+        int, int, 
+        int, int
+    );
+    
+    void _merge_PngSrcs_Hori_General_AlargerThanB
+    (
+        int, int, 
+        int, int, 
+        int, int
+    );
+    
+    void _merge_PngSrcs_Hori_General_AsmallerThanB
+    (
+        int, int, 
+        int, int, 
+        int, int
+    );
+    
 #ifdef	__cplusplus
 }
 #endif

@@ -1042,8 +1042,8 @@ void _test_ReadPng_Merge
     if (png_sig_cmp(header, 0, 8))
             abort_("[read_png_file] File %s is not recognized as a PNG file", file_name);
 
-    //log
-    printf("[%s : %d] file name => %s\n", base_name(__FILE__), __LINE__, file_name);
+//    //log
+//    printf("[%s : %d] file name => %s\n", base_name(__FILE__), __LINE__, file_name);
 
 
     if (setjmp(png_jmpbuf(png_ptr)))
@@ -1471,17 +1471,17 @@ void init_Row_Pointers_C
     
     row_pointers_C = (png_bytep*) malloc(sizeof(png_bytep) * (height));
 
-    //log
-    printf("[%s : %d] malloc done for row_pointers_C\n", 
-            base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] malloc done for row_pointers_C\n", 
+//            base_name(__FILE__), __LINE__);
 
     
     for (y=0; y < height; y++)
             row_pointers_C[y] = 
                     (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
     
-    //log
-    printf("[%s : %d] malloc done for => row_pointers_C[y]\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] malloc done for => row_pointers_C[y]\n", base_name(__FILE__), __LINE__);
 
     
     for (y = 0; y < height; y++) {
@@ -1526,8 +1526,6 @@ void merge_PngSrcs
             width_C, height_C
             );
 
-    
-    
     int x, x2, y;
     
     for(y = 0; y < height_B; y++) {
@@ -1584,4 +1582,227 @@ void merge_PngSrcs
     }
     
     
-}
+}//void merge_PngSrcs
+
+void merge_PngSrcs_Hori_General
+(
+    int width_A, int height_A, 
+    int width_B, int height_B, 
+    int width_C, int height_C
+)
+{
+    //log
+    printf("[%s : %d] width_A, height_A => %d, %d\n"
+            "width_B, height_B => %d, %d\n"
+            "width_C, height_C => %d, %d\n", base_name(__FILE__), __LINE__,
+            width_A, height_A,
+            width_B, height_B,
+            width_C, height_C
+            );
+
+    if(height_A >= height_B) {
+        
+        _merge_PngSrcs_Hori_General_AlargerThanB
+                (width_A, height_A,
+                    width_B, height_B,
+                    width_C, height_C);
+        
+    } else {
+        
+        _merge_PngSrcs_Hori_General_AsmallerThanB
+                (width_A, height_A,
+                    width_B, height_B,
+                    width_C, height_C);
+        
+    }
+    
+//    int x, x2, y;
+//    
+//    for(y = 0; y < height_B; y++) {
+////    for(y = 0; y < height_A; y++) {
+//        
+//        png_byte *row_A = row_pointers_A[y];
+//        png_byte *row_B = row_pointers_B[y];
+//        png_byte *row_C = row_pointers_C[y];
+//        
+//        for(x = 0; x < width_A; x++) {
+//            
+//            png_byte *ptr_A = &(row_A[x * 3]);
+//            png_byte *ptr_C = &(row_C[x * 3]);
+//            
+//            ptr_C[0] = ptr_A[0];
+//            ptr_C[1] = ptr_A[1];
+//            ptr_C[2] = ptr_A[2];
+//            
+//            
+//        }//for(x = 0; x < width_A; x++)
+//    
+//        for(x2 = 0; x2 < width_B; x++, x2++) {
+//            
+//            png_byte *ptr_B = &(row_B[x2 * 3]);
+//            png_byte *ptr_C = &(row_C[x * 3]);
+//            
+//            ptr_C[0] = ptr_B[0];
+//            ptr_C[1] = ptr_B[1];
+//            ptr_C[2] = ptr_B[2];
+//            
+//            
+//        }//for(x = 0; x < width_A; x++)
+//    
+//    }//for(y = 0; y < height_B; y++)
+//    
+//    // chunk 2
+//    for(y = height_B; y < height_C; y++) {
+//
+//        png_byte *row_A = row_pointers_A[y];
+//        png_byte *row_C = row_pointers_C[y];
+//        
+//        for(x = 0; x < width_A; x++) {
+//            
+//            png_byte *ptr_A = &(row_A[x * 3]);
+//            png_byte *ptr_C = &(row_C[x * 3]);
+//            
+//            ptr_C[0] = ptr_A[0];
+//            ptr_C[1] = ptr_A[1];
+//            ptr_C[2] = ptr_A[2];
+//            
+//            
+//        }//for(x = 0; x < width_A; x++)
+//        
+//    }//for(y = height_B; y < height_C; y++)
+    
+    
+}//void merge_PngSrcs_Hori_General
+
+void _merge_PngSrcs_Hori_General_AlargerThanB
+(
+        int width_A, int height_A,
+        int width_B, int height_B,
+        int width_C, int height_C)
+{
+    //log
+    printf("[%s : %d] _merge_PngSrcs_Hori_General_AlargerThanB()\n",
+            base_name(__FILE__), __LINE__);
+    
+    int x, x2, y;
+    
+    for(y = 0; y < height_B; y++) {
+//    for(y = 0; y < height_A; y++) {
+        
+        png_byte *row_A = row_pointers_A[y];
+        png_byte *row_B = row_pointers_B[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_A; x++) {
+            
+            png_byte *ptr_A = &(row_A[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_A[0];
+            ptr_C[1] = ptr_A[1];
+            ptr_C[2] = ptr_A[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+        for(x2 = 0; x2 < width_B; x++, x2++) {
+            
+            png_byte *ptr_B = &(row_B[x2 * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_B[0];
+            ptr_C[1] = ptr_B[1];
+            ptr_C[2] = ptr_B[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+    }//for(y = 0; y < height_B; y++)
+    
+    // chunk 2
+    for(y = height_B; y < height_C; y++) {
+
+        png_byte *row_A = row_pointers_A[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_A; x++) {
+            
+            png_byte *ptr_A = &(row_A[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_A[0];
+            ptr_C[1] = ptr_A[1];
+            ptr_C[2] = ptr_A[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+        
+    }//for(y = height_B; y < height_C; y++)
+    
+}//void _merge_PngSrcs_Hori_General_AlargerThanB
+
+void _merge_PngSrcs_Hori_General_AsmallerThanB
+(
+        int width_A, int height_A,
+        int width_B, int height_B,
+        int width_C, int height_C)
+{
+    //log
+    printf("[%s : %d] _merge_PngSrcs_Hori_General_AsmallerThanB()\n",
+            base_name(__FILE__), __LINE__);
+
+    int x, x2, y;
+    
+    for(y = 0; y < height_A; y++) {
+        
+        png_byte *row_A = row_pointers_A[y];
+        png_byte *row_B = row_pointers_B[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = 0; x < width_A; x++) {
+            
+            png_byte *ptr_A = &(row_A[x * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_A[0];
+            ptr_C[1] = ptr_A[1];
+            ptr_C[2] = ptr_A[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+        for(x2 = 0; x2 < width_B; x++, x2++) {
+            
+            png_byte *ptr_B = &(row_B[x2 * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_B[0];
+            ptr_C[1] = ptr_B[1];
+            ptr_C[2] = ptr_B[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+    
+    }//for(y = 0; y < height_B; y++)
+    
+    // chunk 2
+    for(y = height_A; y < height_C; y++) {
+
+        png_byte *row_B = row_pointers_B[y];
+        png_byte *row_C = row_pointers_C[y];
+        
+        for(x = width_A, x2 = 0; x2 < width_B; x++, x2++) {
+            
+            png_byte *ptr_B = &(row_B[x2 * 3]);
+            png_byte *ptr_C = &(row_C[x * 3]);
+            
+            ptr_C[0] = ptr_B[0];
+            ptr_C[1] = ptr_B[1];
+            ptr_C[2] = ptr_B[2];
+            
+            
+        }//for(x = 0; x < width_A; x++)
+        
+    }//for(y = height_B; y < height_C; y++)
+    
+}//void _merge_PngSrcs_Hori_General_AsmallerThanB

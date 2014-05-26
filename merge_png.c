@@ -242,23 +242,23 @@ int main(int argc, char** argv) {
     
     consolColor_Reset();
 
-    //log
-    printf("[%s : %d] png_ptr_A->color_type, png_ptr_B->color_type => %d, %d\n", 
-            base_name(__FILE__), __LINE__, png_ptr_A->color_type, png_ptr_B->color_type);
+//    //log
+//    printf("[%s : %d] png_ptr_A->color_type, png_ptr_B->color_type => %d, %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_A->color_type, png_ptr_B->color_type);
 
     
-    //log
-    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
-            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
+//    //log
+//    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
 
     
-    //log
-    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
-            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
-
-    //log
-    printf("[%s : %d] png_ptr_B: w, h => %d, %d\n", 
-            base_name(__FILE__), __LINE__, png_ptr_B->width, png_ptr_B->height);
+//    //log
+//    printf("[%s : %d] png_ptr_A: w, h => %d, %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_A->width, png_ptr_A->height);
+//
+//    //log
+//    printf("[%s : %d] png_ptr_B: w, h => %d, %d\n", 
+//            base_name(__FILE__), __LINE__, png_ptr_B->width, png_ptr_B->height);
 
     /*************************************
  
@@ -293,9 +293,9 @@ int main(int argc, char** argv) {
     info_ptr_C->rowbytes = info_ptr_A->rowbytes + info_ptr_B->rowbytes;
     
     
-    //log
-    printf("[%s : %d] info_ptr_C->rowbytes => %d\n", 
-            base_name(__FILE__), __LINE__, info_ptr_C->rowbytes);
+//    //log
+//    printf("[%s : %d] info_ptr_C->rowbytes => %d\n", 
+//            base_name(__FILE__), __LINE__, info_ptr_C->rowbytes);
 
     
     /*************************************
@@ -338,7 +338,8 @@ int main(int argc, char** argv) {
      * copy: png A to png C
  
      **************************************/
-    merge_PngSrcs(
+//    merge_PngSrcs(
+    merge_PngSrcs_Hori_General(
             width_A, height_A,
             width_B, height_B,
             width_C, height_C

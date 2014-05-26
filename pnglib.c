@@ -8,11 +8,13 @@
 char *bg_colors_2[] = {
     
     "red", "blue", "green", "purple",
-    "white", "black"
+    "white", "black", "gray"
 
 };
 
-int histo_png_size[2] = {255, 255};
+int histo_png_size[2] = {255, 255};     // width, height
+
+
 
 void show_message_png()
 {
@@ -422,8 +424,8 @@ void _test_WritePng__Process
     if (!png_ptr)
             abort_("[write_png_file] png_create_write_struct failed");
 
-    //log
-    printf("[%s : %d] png_ptr => created\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] png_ptr => created\n", base_name(__FILE__), __LINE__);
 
     
     info_ptr = png_create_info_struct(png_ptr);
@@ -433,8 +435,8 @@ void _test_WritePng__Process
     if (setjmp(png_jmpbuf(png_ptr)))
             abort_("[write_png_file] Error during init_io");
 
-    //log
-    printf("[%s : %d] png_create_info_struct => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] png_create_info_struct => done\n", base_name(__FILE__), __LINE__);
 
     
     png_init_io(png_ptr, fp);
@@ -451,28 +453,28 @@ void _test_WritePng__Process
                  *bit_depth, *color_type, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
-    //log
-    printf("[%s : %d] png_ptr->height => %d\n",
-            base_name(__FILE__), __LINE__, png_ptr->height);
-    
-    printf("[%s : %d] info_ptr->height => %d\n",
-            base_name(__FILE__), __LINE__, info_ptr->height);
+//    //log
+//    printf("[%s : %d] png_ptr->height => %d\n",
+//            base_name(__FILE__), __LINE__, png_ptr->height);
+//    
+//    printf("[%s : %d] info_ptr->height => %d\n",
+//            base_name(__FILE__), __LINE__, info_ptr->height);
 
     
-    //log
-    printf("[%s : %d] png_set_IHDR => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] png_set_IHDR => done\n", base_name(__FILE__), __LINE__);
 
     
     png_write_info(png_ptr, info_ptr);
 
-    //log
-    printf("[%s : %d] png_write_info => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] png_write_info => done\n", base_name(__FILE__), __LINE__);
 //
-    //log
-    printf("[%s : %d] png_ptr->height => %d\n",
-            base_name(__FILE__), __LINE__, png_ptr->height);
-    printf("[%s : %d] png_ptr->width => %d\n",
-            base_name(__FILE__), __LINE__, png_ptr->width);
+//    //log
+//    printf("[%s : %d] png_ptr->height => %d\n",
+//            base_name(__FILE__), __LINE__, png_ptr->height);
+//    printf("[%s : %d] png_ptr->width => %d\n",
+//            base_name(__FILE__), __LINE__, png_ptr->width);
 
     /* write bytes */
     if (setjmp(png_jmpbuf(png_ptr)))
@@ -480,8 +482,8 @@ void _test_WritePng__Process
 
     png_write_image(png_ptr, row_pointers_B);
 
-    //log
-    printf("[%s : %d] png_write_image => done\n", base_name(__FILE__), __LINE__);
+//    //log
+//    printf("[%s : %d] png_write_image => done\n", base_name(__FILE__), __LINE__);
 
 
     /* end write */
@@ -1808,6 +1810,10 @@ void init_Row_Pointers_B__Histo
                 
                 set_PixelVals(ptr, PIXEL_BLACK);
                 
+            } else if (!strcmp(bg_color_name, "gray")) {
+                
+                set_PixelVals(ptr, PIXEL_GRAY);
+                
             } else {
                 
                 consolColor_Change(RED);
@@ -1843,6 +1849,15 @@ void set_PixelVals(png_byte* ptr, int r, int g, int b)
     ptr[0] = 255 * r / 100;
     ptr[1] = 255 * g / 100;
     ptr[2] = 255 * b / 100;
+//    ptr[1] = g; ptr[2] = b;
+//    ptr[0] = r; ptr[1] = g; ptr[2] = b;
+}
+
+void set_PixelVals_2(png_byte* ptr, int colors[3])
+{
+    ptr[0] = 255 * colors[0] / 100;
+    ptr[1] = 255 * colors[1] / 100;
+    ptr[2] = 255 * colors[2] / 100;
 //    ptr[1] = g; ptr[2] = b;
 //    ptr[0] = r; ptr[1] = g; ptr[2] = b;
 }
@@ -2310,6 +2325,121 @@ void process_file__RGB
             base_name(__FILE__), __LINE__, row_pointers_B[0][10]);
     printf("[%s : %d] row_pointers_B[0][20] => %d\n", 
             base_name(__FILE__), __LINE__, row_pointers_B[0][20]);
+
+    
+}
+
+void gen_HistoData(int width_A, int height_A)
+{
+    int x, y;
+    
+    for (y = 0; y < height_A; y++) {
+
+        png_byte *row_A = row_pointers_A[y];
+        
+        for (x = 0; x < width_A; x++) {
+
+            png_byte *ptr_A = &(row_A[x * 3]);
+            
+            histo[ptr_A[1]] ++;
+//            histo[ptr_A[2]] ++;
+//            histo[ptr_A[0]] ++;
+
+        }
+
+    }//for (y = 0; y < height_A; y++)
+
+    /**************************
+     * Get: range
+     **************************/
+    // max
+    int tmp = histo[0];
+    int i;      // iterator
+    
+    for (i = 0; i < MAX_BRIGHTNESS; i++) {
+
+        if(histo[i] > tmp)
+            tmp = histo[i];
+
+    }
+    
+    histo_range[0] = tmp;
+    
+    // minimum
+    tmp = histo[0];
+    
+    for (i = 0; i < MAX_BRIGHTNESS; i++) {
+
+        if(histo[i] < tmp)
+            tmp = histo[i];
+
+    }
+    
+    histo_range[1] = tmp;
+    
+    /**************************
+     * Histo data => Convert to the range
+     **************************/
+    //test
+    //log
+    printf("[%s : %d] max in histo[] => %d\n", 
+            base_name(__FILE__), __LINE__, get_max_element(histo, MAX_BRIGHTNESS));
+
+    
+    for (i = 0; i < MAX_BRIGHTNESS; i++) {
+
+        histo[i] = MAX_BRIGHTNESS * histo[i] / histo_range[0];
+
+    }
+
+    //log
+    printf("[%s : %d] max in histo[] => %d\n", 
+            base_name(__FILE__), __LINE__, get_max_element(histo, MAX_BRIGHTNESS));
+
+
+}//void gen_HistoData(int width_A, int height_A)
+
+void gen_HistoPixels()
+{
+//    int width = histo_png_size[0];
+    int height = histo_png_size[1];
+    
+    int x, y;
+    
+    //log
+    printf("[%s : %d] Start => for loop\n", base_name(__FILE__), __LINE__);
+
+    
+    for (y = 0; y < height; y++) {
+
+        png_byte *row_B = row_pointers_B[y];
+        
+//        //log
+//        printf("[%s : %d] y => %d\n", base_name(__FILE__), __LINE__, y);
+
+        
+        for (x = 0; x < histo[y]; x++) {
+            
+//            //log
+//            printf("[%s : %d] histo[y] => %d\n", 
+//                    base_name(__FILE__), __LINE__, histo[y]);
+
+
+            png_byte *ptr_B = &(row_B[x * 3]);
+            
+            int colors[3] = {PIXEL_GREEN};
+//            colors[] = {PIXEL_GREEN};
+            
+            set_PixelVals_2(ptr_B, colors);
+//            set_PixelVals(ptr_B, PIXEL_GREEN);
+//            set_PixelVals(ptr_B, PIXEL_BLUE);
+//            ptr_B[0] = 255;
+//            ptr_B[1] = 0;
+//            ptr_B[2] = 0;
+
+        }
+
+    }//for (y = 0; y < height_A; y++)
 
     
 }

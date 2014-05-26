@@ -25,6 +25,7 @@ const char *LOG_FILE_PATH = "./log/exec_log.txt";
  **************************/
 void log_Command_Input(int, char **);
 
+void write_Log(char *, int, char *);
 
 #ifdef	__cplusplus
 }

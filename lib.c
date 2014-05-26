@@ -1014,3 +1014,33 @@ char *get_TimeLabel_Now(TimeLabelType type)
 //    return NULL;
     
 }
+
+/**************************
+ * get_max_element(int *array, int num_of_elements)
+ * 
+ * @return NULL => 1. array size < 1
+ **************************/
+int get_max_element(int *array, int num_of_elements)
+{
+    /**************************
+     * Validation
+     **************************/
+    if(array == NULL) return NULL;
+    if(num_of_elements == NULL
+            || num_of_elements < 1) return NULL;
+
+    /**************************
+     * vars
+     **************************/
+    int i;
+    int tmp = array[0];
+    
+    for (i = 0; i < num_of_elements; i++) {
+
+        if(array[i] > tmp) tmp = array[i];
+
+    }
+
+    return tmp;
+    
+}//int get_max_element(int *array, int num_of_elements)

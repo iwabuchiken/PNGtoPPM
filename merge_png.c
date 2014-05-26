@@ -109,7 +109,7 @@ int set_Options_Process_RGB(char **);
 char * _setup_FileName_Src__Process(int, char **);
 char * _setup_FileName_Dst__Process(int, char **);
 
-void log_Command_Input(int, char **);
+//void log_Command_Input(int, char **);
 int _Dispatch_ModeOptions(int, char **);
 
 // Mode_Histo
@@ -161,6 +161,8 @@ int main(int argc, char** argv) {
     
     /**************************
      * Log: command line input
+     * 
+     * File: methods.c
      **************************/
     log_Command_Input(argc, argv);
     
@@ -511,6 +513,7 @@ int main(int argc, char** argv) {
     (file_dst, png_ptr_C, info_ptr_C,
         &width_C, &height_C,
         &color_type_C, &bit_depth_C, 3);
+
     
 //    _test_WritePng_Rgba
 //    (file_path_dst, png_ptr_Dst, info_ptr_Dst,
@@ -2014,15 +2017,31 @@ void Mode_Histo(int argc, char **argv)
 //    //log
 //    printf("[%s : %d] read png => done\n", base_name(__FILE__), __LINE__);
 
+    consolColor_Reset();
+    
     //log
     printf("[%s : %d] png_ptr_A->width => %d\n", 
             base_name(__FILE__), __LINE__, png_ptr_A->width);
     printf("[%s : %d] width_A => %d\n", 
             base_name(__FILE__), __LINE__, width_A);
 
+    /**************************
+     * Get: histo data
+     **************************/
+    gen_HistoData(width_A, height_A);
     
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] gen_HistoData => done\n",
+            base_name(__FILE__), __LINE__);
+
     consolColor_Reset();
     
+    //log
+    printf("[%s : %d] histo_range[0], histo_range[1] => %d, %d\n", 
+            base_name(__FILE__), __LINE__, histo_range[0], histo_range[1]);
+
     /*************************************
  
      * Build: dst png: info
@@ -2073,11 +2092,12 @@ void Mode_Histo(int argc, char **argv)
             base_name(__FILE__), __LINE__, width_B);
     
     /**************************
-     * Build: dst png: info
+     * Build: dst png: pixels
      * 
      * 
      **************************/
-    char *bg_color_name = "white";
+    char *bg_color_name = "gray";
+//    char *bg_color_name = "white";
     
     init_Row_Pointers_B__Histo(png_ptr_B, info_ptr_B, bg_color_name);
 
@@ -2087,6 +2107,21 @@ void Mode_Histo(int argc, char **argv)
     printf("[%s : %d] info_ptr_B->rowbytes => %d\n", 
             base_name(__FILE__), __LINE__, info_ptr_B->rowbytes);
 
+    
+    /**************************
+     * Get: Histo pixels
+     **************************/
+    gen_HistoPixels();
+            
+    consolColor_Change(LIGHT_YELLOW);
+
+    //log
+    printf("[%s : %d] gen_HistoPixels() => done\n",
+            base_name(__FILE__), __LINE__);
+
+    consolColor_Reset();
+
+    
     
     /*************************************
  
@@ -2098,12 +2133,25 @@ void Mode_Histo(int argc, char **argv)
         &width_B, &height_B,
         &color_type_B, &bit_depth_B);
     
+    
+    
 //    _test_WritePng_Rgba
 //    (file_path_dst, png_ptr_Dst, info_ptr_Dst,
 //        &width_Dst, &height_Dst,
 //        &color_type_Dst, &bit_depth_Dst);
-    
+
+    consolColor_Change(LIGHT_YELLOW);
+
     //log
     printf("[%s : %d] _test_WritePng() => done\n", base_name(__FILE__), __LINE__);
+    
+
+    consolColor_Reset();
+    
+    char *message = concat("Dst file name => ", file_dst);
+    
+    // write_log => methods.c
+    write_Log(__FILE__, __LINE__, message);
+
     
 }//void Mode_Histo(int argc, char **argv)

@@ -231,6 +231,8 @@ char *join_simple(char **, int num);
 
 char *get_TimeLabel_Now(TimeLabelType);
 
+int get_max_element(int *, int);
+
 #ifdef	__cplusplus
 }
 #endif

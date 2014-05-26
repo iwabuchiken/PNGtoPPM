@@ -46,8 +46,11 @@ typedef unsigned long   ulg;  // readpng.h
 #define PIXEL_BLUE      0, 0, 100
 #define PIXEL_RED       100, 0, 0
 #define PIXEL_PURPLE    100, 0, 100
-#define PIXEL_WHITE    100, 100, 100
-#define PIXEL_BLACK    0, 0, 0
+#define PIXEL_WHITE     100, 100, 100
+#define PIXEL_BLACK     0, 0, 0
+#define PIXEL_GRAY      50, 50, 50
+
+#define MAX_BRIGHTNESS 255
 
 /////////////////////////////////////////
 
@@ -81,9 +84,19 @@ typedef enum {
 extern "C" {
 #endif
 
+    // Background colors used in the histogram PNG file
     char *bg_colors_2[];
     
+    // Image size of the histogram PNG file
     int histo_png_size[2];
+    
+    // Array of histogram values
+    int histo[MAX_BRIGHTNESS];
+    
+    // 1. max and minimum of the brightness value of a given PNG file
+    // 2. used in the function: gen_HistoData(int width_A, int height_A)
+    // 3. histo_range[max, minimum]
+    int histo_range[2];     
     
 //    char *bg_colors_2[6];
 //    char *bg_colors_2[6] = {
@@ -182,6 +195,7 @@ extern "C" {
             png_infop, int *, int *);
     
     void set_PixelVals(png_byte*, int, int, int);
+    void set_PixelVals_2(png_byte*, int[3]);
 
     void merge_PngSrcs(
             int, int, 
@@ -232,7 +246,10 @@ extern "C" {
     (png_structp, png_structp, int **, ProcMode);
     
     void init_Row_Pointers_B__Histo(png_structp, png_infop, char *);
+
+    void gen_HistoData(int, int);
     
+    void gen_HistoPixels(void);
     
 #ifdef	__cplusplus
 }

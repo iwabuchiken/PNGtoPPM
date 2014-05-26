@@ -964,7 +964,7 @@ char * _setup_FileName_Dst__Process(int argc, char **argv)
 //        return tmp_str;
 
         
-    } else {
+    } else {//if (tokens != NULL)
         
         consolColor_Change(RED);
 
@@ -979,7 +979,7 @@ char * _setup_FileName_Dst__Process(int argc, char **argv)
 //        return dst;
 //        return argv[3];
 
-    }
+    }//if (tokens != NULL)
     
     // return
     return file_dst;

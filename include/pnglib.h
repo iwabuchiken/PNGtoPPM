@@ -264,6 +264,8 @@ extern "C" {
 
     char *get_Opt_Value(char **, const char *);
     
+    char *modify_DstFileName_Histo_RGB(char *, char *);
+    
 #ifdef	__cplusplus
 }
 #endif

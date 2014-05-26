@@ -3097,3 +3097,84 @@ char *get_Opt_Value(char **argv, const char *opt)
     return opt_val;   
     
 }
+
+char *modify_DstFileName_Histo_RGB
+(char *file_dst, char *opt_RGB)
+{
+    /**************************
+     * Add info: RGB
+     **************************/
+    char delim = '.';
+    int *num_of_tokens;
+    int position = 1;
+    
+    char **tokens = str_split_r_2
+                (file_dst, delim, position, num_of_tokens);
+    
+    if (tokens != NULL) {
+
+        //log
+        printf("[%s : %d] tokens[0] = %s / tokens[1] = %s\n", 
+                base_name(__FILE__), __LINE__, tokens[0], tokens[1]);
+        
+//        free(file_dst);
+        
+        char *label = "_rgb=";
+        
+//        char *rgb_info = (char *) malloc(sizeof(char) * (11 + 1));
+//        
+//        sprintf(rgb_info, "%d,%d,%d", RGB[0], RGB[1], RGB[2]);
+        
+        char *rgb_info = concat(label, opt_RGB);
+//        char *bg_info = concat(label, opt_bg_color);
+        
+//        // direction
+//        label = "_direc=";
+//        char *direc_info = concat(label, direc[opt_merge_direc]);
+//        
+//        //log
+//        printf("[%s : %d] bg_info => %s\n", base_name(__FILE__), __LINE__, bg_info);
+
+        int size = 4;
+        
+        char **tmp = (char **) malloc(sizeof(char *) * size);
+//        char **tmp = (char **) malloc(sizeof(char *) * 4);
+        
+        char *joint_str = ".";
+        
+        tmp[0] = tokens[0];
+        tmp[1] = rgb_info;
+        tmp[2] = joint_str;
+        tmp[3] = tokens[1];
+        
+        char *tmp_str = join_simple(tmp, size);
+//        char *tmp_str = join_simple(tmp, 4);
+//        char *tmp_str = join_simple(tmp, (sizeof(tmp) / sizeof(char *)));
+        
+        //log
+        printf("[%s : %d] tmp_str => %s\n", base_name(__FILE__), __LINE__, tmp_str);
+        
+        file_dst = tmp_str;
+        
+//        return dst;
+//        return tmp_str;
+
+        
+    } else {//if (tokens != NULL)
+        
+        consolColor_Change(RED);
+
+        //log
+        printf("[%s : %d] tokens => NULL\n",
+                base_name(__FILE__), __LINE__);
+
+        consolColor_Reset();
+        
+        exit(-1);
+        
+//        return dst;
+//        return argv[3];
+
+    }//if (tokens != NULL)
+    
+}//char *modify_DstFileName_Histo_RGB

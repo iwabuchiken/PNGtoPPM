@@ -1953,6 +1953,12 @@ void Mode_Histo(int argc, char **argv)
 
     png_structp png_ptr_B; png_infop info_ptr_B;
     
+    // C
+    int width_C, height_C; int number_of_passes_C;
+    png_byte color_type_C, bit_depth_C;
+
+    png_structp png_ptr_C; png_infop info_ptr_C;
+    
     /*************************************
  
      * setup: vars
@@ -1978,6 +1984,17 @@ void Mode_Histo(int argc, char **argv)
     // info_ptr_B
     info_ptr_B = png_create_info_struct(png_ptr_B);
     if (!info_ptr_B)
+            abort_("[read_png_file] png_create_info_struct failed");
+
+    // png_ptr_C
+    png_ptr_C = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (!png_ptr_C)
+            abort_("[read_png_file] png_create_read_struct failed");
+    
+    // info_ptr_C
+    info_ptr_C = png_create_info_struct(png_ptr_C);
+    if (!info_ptr_C)
             abort_("[read_png_file] png_create_info_struct failed");
 
     consolColor_Change(LIGHT_YELLOW);
@@ -2069,6 +2086,24 @@ void Mode_Histo(int argc, char **argv)
 //    info_ptr_B->rowbytes = info_ptr_A->rowbytes;
     info_ptr_B->rowbytes = width_B * 3;
     png_ptr_B->rowbytes = info_ptr_B->rowbytes;
+    
+    // png_ptr_C
+    width_C = histo_png_size[0];
+    height_C = histo_png_size[1];
+//    width_C = width_A;
+//    height_C = height_A;
+//    height_C = height_A + height_C;
+
+    color_type_C = color_type_A;
+    bit_depth_C = bit_depth_A;
+
+    png_ptr_C->width = width_C;
+    png_ptr_C->height = height_C;
+    png_ptr_C->color_type = color_type_C;
+    
+//    info_ptr_C->rowbytes = info_ptr_A->rowbytes;
+    info_ptr_C->rowbytes = width_C * 3;
+    png_ptr_C->rowbytes = info_ptr_C->rowbytes;
     
     //log
     printf("[%s : %d] info_ptr_B->rowbytes => %d\n", 

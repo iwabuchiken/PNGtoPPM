@@ -1775,44 +1775,60 @@ void init_Row_Pointers_B__Histo
             row_pointers_B[y] = 
                     (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
 
+    // C
+    row_pointers_C = (png_bytep*) malloc(sizeof(png_bytep) * (height));
+
+    for (y=0; y < height; y++)
+            row_pointers_C[y] = 
+                    (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+
     /**************************
      * Bg color
      **************************/
     for (y = 0; y < height; y++) {
 
         png_byte* row = row_pointers_B[y];
+        png_byte* row_C = row_pointers_C[y];
 //
         for (x=0; x<width; x++) {
 
             png_byte* ptr = &(row[x*3]);
+            png_byte* ptr_C = &(row_C[x*3]);
             
             if (!strcmp(bg_color_name, "green")) {
                 
                 set_PixelVals(ptr, PIXEL_GREEN);
+                set_PixelVals(ptr_C, PIXEL_GREEN);
 
             } else if (!strcmp(bg_color_name, "red")) {
                 
                 set_PixelVals(ptr, PIXEL_RED);
+                set_PixelVals(ptr_C, PIXEL_RED);
                 
             } else if (!strcmp(bg_color_name, "blue")) {
                 
                 set_PixelVals(ptr, PIXEL_BLUE);
+                set_PixelVals(ptr_C, PIXEL_BLUE);
                 
             } else if (!strcmp(bg_color_name, "purple")) {
                 
                 set_PixelVals(ptr, PIXEL_PURPLE);
+                set_PixelVals(ptr_C, PIXEL_PURPLE);
                 
             } else if (!strcmp(bg_color_name, "white")) {
                 
                 set_PixelVals(ptr, PIXEL_WHITE);
+                set_PixelVals(ptr_C, PIXEL_WHITE);
                 
             } else if (!strcmp(bg_color_name, "black")) {
                 
                 set_PixelVals(ptr, PIXEL_BLACK);
+                set_PixelVals(ptr_C, PIXEL_BLACK);
                 
             } else if (!strcmp(bg_color_name, "gray")) {
                 
                 set_PixelVals(ptr, PIXEL_GRAY);
+                set_PixelVals(ptr_C, PIXEL_GRAY);
                 
             } else {
                 
@@ -2401,7 +2417,7 @@ void gen_HistoData(int width_A, int height_A)
 
 void gen_HistoPixels()
 {
-//    int width = histo_png_size[0];
+    int width = histo_png_size[0];
     int height = histo_png_size[1];
     
     int x, y;
@@ -2441,5 +2457,110 @@ void gen_HistoPixels()
 
     }//for (y = 0; y < height_A; y++)
 
+    /**************************
+     * Rotate pixels
+     **************************/
+    for (y = 0; y < height; y++) {
+
+//        png_byte *row_B = row_pointers_B[0];
+        png_byte *row_B = row_pointers_B[y];
+        
+//        //log
+//        printf("[%s : %d] y => %d\n", base_name(__FILE__), __LINE__, y);
+
+        
+        for (x = 0; x < width; x++) {
+            
+            png_byte *ptr_B = &(row_B[x * 3]);
+            
+//            //log
+//            printf("[%s : %d] (width - 1) - x = %d\n", 
+//                base_name(__FILE__), __LINE__, ((width - 1) - x));
+
+            
+            row_pointers_C[(width - 1) - x][y * 3 + 0] = ptr_B[0];
+            row_pointers_C[(width - 1) - x][y * 3 + 1] = ptr_B[1];
+            row_pointers_C[(width - 1) - x][y * 3 + 2] = ptr_B[2];
+//            row_pointers_C[(width - 1) - x][0] = ptr_B[0];
+//            row_pointers_C[(width - 1) - x][1] = ptr_B[1];
+//            row_pointers_C[(width - 1) - x][2] = ptr_B[2];
+//            row_pointers_C[0][(width - 1) - x] = ptr_B[0];
+//            row_pointers_C[1][(width - 1) - x] = ptr_B[1];
+//            row_pointers_C[2][(width - 1) - x] = ptr_B[2];
+//            row_pointers_C[x][y] = row_pointers_B[y][(width - 1) - x];
+//            row_pointers_C[x][y] = row_pointers_B[y][width - 1];
+//        for (x = 0; x < histo[y]; x++) {
+            
+//            //log
+//            printf("[%s : %d] histo[y] => %d\n", 
+//                    base_name(__FILE__), __LINE__, histo[y]);
+
+
+//            png_byte *ptr_B = &(row_B[x * 3]);
+//            
+//            int colors[3] = {PIXEL_GREEN};
+////            colors[] = {PIXEL_GREEN};
+//            
+//            set_PixelVals_2(ptr_B, colors);
+//            set_PixelVals(ptr_B, PIXEL_GREEN);
+//            set_PixelVals(ptr_B, PIXEL_BLUE);
+//            ptr_B[0] = 255;
+//            ptr_B[1] = 0;
+//            ptr_B[2] = 0;
+
+        }
+
+    }//for (y = 0; y < height_A; y++)
     
-}
+////    for (y = 0; y < height; y++) {
+//
+//        png_byte *row_B = row_pointers_B[0];
+////        png_byte *row_B = row_pointers_B[y];
+//        
+////        //log
+////        printf("[%s : %d] y => %d\n", base_name(__FILE__), __LINE__, y);
+//
+//        
+//        for (x = 0; x < width; x++) {
+//            
+//            png_byte *ptr_B = &(row_B[x * 3]);
+//            
+//            //log
+//            printf("[%s : %d] (width - 1) - x = %d\n", 
+//                base_name(__FILE__), __LINE__, ((width - 1) - x));
+//
+//            
+//            row_pointers_C[(width - 1) - x][0] = ptr_B[0];
+//            row_pointers_C[(width - 1) - x][1] = ptr_B[1];
+//            row_pointers_C[(width - 1) - x][2] = ptr_B[2];
+////            row_pointers_C[0][(width - 1) - x] = ptr_B[0];
+////            row_pointers_C[1][(width - 1) - x] = ptr_B[1];
+////            row_pointers_C[2][(width - 1) - x] = ptr_B[2];
+////            row_pointers_C[x][y] = row_pointers_B[y][(width - 1) - x];
+////            row_pointers_C[x][y] = row_pointers_B[y][width - 1];
+////        for (x = 0; x < histo[y]; x++) {
+//            
+////            //log
+////            printf("[%s : %d] histo[y] => %d\n", 
+////                    base_name(__FILE__), __LINE__, histo[y]);
+//
+//
+////            png_byte *ptr_B = &(row_B[x * 3]);
+////            
+////            int colors[3] = {PIXEL_GREEN};
+//////            colors[] = {PIXEL_GREEN};
+////            
+////            set_PixelVals_2(ptr_B, colors);
+////            set_PixelVals(ptr_B, PIXEL_GREEN);
+////            set_PixelVals(ptr_B, PIXEL_BLUE);
+////            ptr_B[0] = 255;
+////            ptr_B[1] = 0;
+////            ptr_B[2] = 0;
+//
+//        }
+//
+////    }//for (y = 0; y < height_A; y++)
+//    
+    row_pointers_B = row_pointers_C;
+    
+}//void gen_HistoPixels()

@@ -146,3 +146,70 @@ argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -d
 [2014:05:26 09:33:41] [merge_png.c : 2154]
 Dst file name => images/histo-9.png
 
+[2014:05:26 10:05:26]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-10.png
+
+[2014:05:26 10:05:26] [merge_png.c : 2189]
+Dst file name => images/histo-10.png
+
+[2014:05:26 10:06:57]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-10.png
+
+[2014:05:26 10:06:57] [merge_png.c : 2189]
+Dst file name => images/histo-10.png
+
+[2014:05:26 10:09:00]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-11.png
+
+[2014:05:26 10:09:00] [merge_png.c : 2189]
+Dst file name => images/histo-11.png
+
+[2014:05:26 10:10:28]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-12.png
+
+[2014:05:26 10:10:28] [merge_png.c : 2189]
+Dst file name => images/histo-12.png
+
+[2014:05:26 10:10:52]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-12.png
+
+[2014:05:26 10:10:52] [merge_png.c : 2189]
+Dst file name => images/histo-12.png
+
+[2014:05:26 10:44:59]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-13.png
+
+[2014:05:26 10:44:59] [merge_png.c : 2189]
+Dst file name => images/histo-13.png
+
+[2014:05:26 10:46:46]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-13-2.png
+
+[2014:05:26 10:46:46] [merge_png.c : 2189]
+Dst file name => images/histo-13-2.png
+
+[2014:05:26 10:52:18]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-13-3.png
+
+[2014:05:26 10:52:18] [merge_png.c : 2189]
+Dst file name => images/histo-13-3.png
+
+[2014:05:26 10:54:53]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-13-4.png
+
+[2014:05:26 10:55:18]
+<argv>
+argc=6: ./dist/Debug/GNU-Linux-x86/pngtoppm -histo -src images/latin_jazz.png -dst images/histo-13-4.png
+
+[2014:05:26 10:55:18] [merge_png.c : 2189]
+Dst file name => images/histo-13-4.png
+
